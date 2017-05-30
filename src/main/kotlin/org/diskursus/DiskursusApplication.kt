@@ -5,10 +5,9 @@ import io.vertx.core.DeploymentOptions
 import io.vertx.core.Vertx
 import io.vertx.kotlin.core.json.json
 import io.vertx.kotlin.core.json.obj
-import io.vertx.ext.web.Router
 import io.vertx.kotlin.config.ConfigRetrieverOptions
 import io.vertx.kotlin.config.ConfigStoreOptions
-import org.diskursus.verticle.MainVerticle
+import org.diskursus.module.DaggerApplicationComponent
 
 /**
  * [Documentation Here]
@@ -20,15 +19,16 @@ class DiskursusApplication {
         @JvmStatic fun main(args: Array<String>) {
             val vertx = Vertx.vertx()
 
-            val mainVerticle = MainVerticle()
             val configRetriever = configRetriever(vertx)
-
             configRetriever.getConfig({ config ->
                 if (config.failed()) {
                     println("Server failed to start when loading config. Cause: ${config.cause()}")
                 } else {
-                    vertx.deployVerticle(mainVerticle, DeploymentOptions().apply {
-                        this.config = config.result()
+                    val configResult = config.result()
+                    val app = DaggerApplicationComponent.builder().build()
+
+                    vertx.deployVerticle(app.mainVerticle(), DeploymentOptions().apply {
+                        this.config = configResult
                     })
 
                     println("Server successfully started...")
