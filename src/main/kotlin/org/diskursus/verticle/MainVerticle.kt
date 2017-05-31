@@ -2,7 +2,6 @@ package org.diskursus.verticle
 
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Future
-import io.vertx.ext.web.Router
 import org.diskursus.controller.MainController
 import javax.inject.Inject
 

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.module.paramnames.ParameterNamesModule
 import dagger.Module
 import dagger.Provides
 import io.vertx.core.Vertx
-import io.vertx.core.eventbus.EventBus
 import io.vertx.core.json.Json
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.Router
