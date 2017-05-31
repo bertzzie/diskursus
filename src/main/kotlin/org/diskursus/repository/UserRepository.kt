@@ -13,7 +13,7 @@ interface UserRepository {
     fun getUsers(page: Int = 1, perPage: Int = 10): Single<List<User>>
     fun getUserData(name: String): Single<User>
 
-    fun addUser(user: User): Single<Boolean>
+    fun addUser(user: User): Single<String>
     fun updateUser(user: User): Single<Boolean>
     fun removeUser(user: User): Single<Boolean>
 }

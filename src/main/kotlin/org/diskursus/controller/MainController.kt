@@ -1,11 +1,14 @@
 package org.diskursus.controller
 
+import io.vertx.core.http.HttpMethod
 import io.vertx.core.json.Json
 import io.vertx.ext.mongo.MongoClient
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
+import io.vertx.ext.web.handler.BodyHandler
 import io.vertx.kotlin.core.json.json
 import io.vertx.kotlin.core.json.obj
+import org.diskursus.model.User
 import org.diskursus.repository.impl.UserRepositoryImpl
 import javax.inject.Inject
 
@@ -50,8 +53,26 @@ class MainController @Inject constructor(override val router: Router,
         user.subscribe(
                 { res ->
                     req.response()
-                            .putHeader("content-type", "application/json")
-                            .end(Json.encode(res.toJson()))
+                       .putHeader("content-type", "application/json")
+                       .end(Json.encode(res.toJson()))
+                },
+                { err ->
+                    req.response()
+                       .putHeader("content-type", "text/html")
+                       .end(err.toString())
+                }
+        )
+    }
+
+    router.route(HttpMethod.PUT, "/user").handler(BodyHandler.create())
+    router.route(HttpMethod.PUT, "/user").handler{ req ->
+        val newUser = User.fromJson(req.bodyAsJson)
+
+        userRepositoryImpl.addUser(newUser).subscribe(
+                { res ->
+                    req.response()
+                       .putHeader("content-type", "application/json")
+                       .end(req.bodyAsString)
                 },
                 { err ->
                     req.response()

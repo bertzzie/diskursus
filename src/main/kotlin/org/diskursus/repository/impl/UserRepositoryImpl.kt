@@ -37,8 +37,10 @@ class UserRepositoryImpl @Inject constructor(val client: MongoClient) : UserRepo
         return result.map { r -> User.fromJson(r) }
     }
 
-    override fun addUser(user: User): Single<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun addUser(user: User): Single<String> {
+        return single<String> {
+            client.insert(docName, user.toJson(), it)
+        }
     }
 
     override fun updateUser(user: User): Single<Boolean> {
