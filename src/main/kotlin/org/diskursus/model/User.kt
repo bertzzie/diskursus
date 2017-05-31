@@ -1,6 +1,11 @@
 package org.diskursus.model
 
+import io.vertx.core.AsyncResult
+import io.vertx.core.Handler
+import io.vertx.core.json.Json
+import io.vertx.ext.auth.AbstractUser
 import io.vertx.core.json.JsonObject
+import io.vertx.ext.auth.AuthProvider
 import io.vertx.kotlin.core.json.json
 import io.vertx.kotlin.core.json.obj
 import org.diskursus.ext.toFullDateTimeString
@@ -20,7 +25,7 @@ data class User(val id: Long,
                 val status: UserStatus,
                 val role: UserRole,
                 val lastLogin: DateTime?,
-                val registerTime: DateTime) {
+                val registerTime: DateTime): AbstractUser() {
     companion object {
         fun getDefaultUser(): User = User(
                 1,
@@ -33,6 +38,30 @@ data class User(val id: Long,
                 null,
                 DateTime.now()
         )
+
+        fun fromJson(obj: JsonObject): User = User(
+                id = obj.getLong("id"),
+                name = obj.getString("name"),
+                email = obj.getString("email"),
+                password = obj.getString("password"),
+                picture = obj.getString("picture"),
+                status = UserStatus.fromString(obj.getString("status")),
+                role = UserRole.fromString(obj.getString("role")),
+                lastLogin = DateTime.parse(obj.getString("lastLogin")),
+                registerTime = DateTime.parse(obj.getString("registerTime"))
+        )
+    }
+
+    override fun principal(): JsonObject {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun setAuthProvider(authProvider: AuthProvider?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun doIsPermitted(permission: String?, resultHandler: Handler<AsyncResult<Boolean>>?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     fun toJson(): JsonObject = json {

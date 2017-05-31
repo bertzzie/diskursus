@@ -1,6 +1,7 @@
 package org.diskursus.module
 
 import dagger.Component
+import io.vertx.core.json.JsonObject
 import org.diskursus.verticle.MainVerticle
 import javax.inject.Named
 import javax.inject.Singleton
