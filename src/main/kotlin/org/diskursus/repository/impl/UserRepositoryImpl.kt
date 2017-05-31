@@ -1,4 +1,4 @@
-package org.diskursus.module
+package org.diskursus.repository.impl
 
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.mongo.MongoClient
