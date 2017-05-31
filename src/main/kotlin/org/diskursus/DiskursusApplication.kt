@@ -8,6 +8,7 @@ import io.vertx.kotlin.core.json.obj
 import io.vertx.kotlin.config.ConfigRetrieverOptions
 import io.vertx.kotlin.config.ConfigStoreOptions
 import org.diskursus.module.DaggerApplicationComponent
+import org.diskursus.module.MongoModule
 import org.diskursus.module.VertxModule
 
 /**
@@ -28,6 +29,7 @@ class DiskursusApplication {
                     val configResult = config.result()
                     val app = DaggerApplicationComponent.builder()
                             .vertxModule(VertxModule(vertx, configResult))
+                            .mongoModule(MongoModule(vertx, configResult))
                             .build()
 
                     vertx.deployVerticle(app.mainVerticle(), DeploymentOptions().apply {

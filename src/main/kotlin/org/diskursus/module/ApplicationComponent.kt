@@ -10,7 +10,7 @@ import javax.inject.Singleton
  * @author Alex Xandra Albert Sim
  */
 @Singleton
-@Component(modules = arrayOf(VertxModule::class))
+@Component(modules = arrayOf(VertxModule::class, MongoModule::class))
 interface ApplicationComponent {
     fun mainVerticle(): MainVerticle
 }
