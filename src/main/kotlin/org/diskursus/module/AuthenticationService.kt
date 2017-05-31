@@ -11,8 +11,8 @@ import io.vertx.ext.auth.User
  *
  * @author Alex Xandra Albert Sim
  */
-class AuthenticationModule: AuthProvider {
-    override fun authenticate(authInfo: JsonObject?, resultHandler: Handler<AsyncResult<User>>?) {
+class AuthenticationService: AuthProvider {
+    override fun authenticate(authInfo: JsonObject, resultHandler: Handler<AsyncResult<User>>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
