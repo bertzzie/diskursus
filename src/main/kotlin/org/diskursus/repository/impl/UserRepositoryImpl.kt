@@ -1,5 +1,6 @@
 package org.diskursus.repository.impl
 
+import io.vertx.core.json.Json
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.mongo.MongoClient
 import io.vertx.kotlin.core.json.json
@@ -24,23 +25,27 @@ class UserRepositoryImpl @Inject constructor(val client: MongoClient) : UserRepo
         return result.map { r -> r.map { u -> User.fromJson(u) } }
     }
 
-    override fun getUsers(page: Int, perPage: Int): List<User> {
+    override fun getUsers(page: Int, perPage: Int): Single<List<User>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getUserData(id: Long): User {
+    override fun getUserData(name: String): Single<User> {
+        val result = single<JsonObject> {
+            client.findOne(docName, json { obj ( "name" to name ) }, null, it)
+        }
+
+        return result.map { r -> User.fromJson(r) }
+    }
+
+    override fun addUser(user: User): Single<Boolean> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun addUser(user: User): Boolean {
+    override fun updateUser(user: User): Single<Boolean> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun updateUser(user: User): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun removeUser(user: User): Boolean {
+    override fun removeUser(user: User): Single<Boolean> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

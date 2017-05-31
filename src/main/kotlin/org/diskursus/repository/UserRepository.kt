@@ -1,7 +1,6 @@
 package org.diskursus.repository
 
 import org.diskursus.model.User
-import rx.Observable
 import rx.Single
 
 /**
@@ -11,10 +10,10 @@ import rx.Single
  */
 interface UserRepository {
     fun getAllUsers(): Single<List<User>>
-    fun getUsers(page: Int = 1, perPage: Int = 10): List<User>
-    fun getUserData(id: Long): User
+    fun getUsers(page: Int = 1, perPage: Int = 10): Single<List<User>>
+    fun getUserData(name: String): Single<User>
 
-    fun addUser(user: User): Boolean
-    fun updateUser(user: User): Boolean
-    fun removeUser(user: User): Boolean
+    fun addUser(user: User): Single<Boolean>
+    fun updateUser(user: User): Single<Boolean>
+    fun removeUser(user: User): Single<Boolean>
 }
