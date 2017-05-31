@@ -64,6 +64,23 @@ class MainController @Inject constructor(override val router: Router,
         )
     }
 
+    router.route(HttpMethod.DELETE, "/user/delete/:name").handler{ req ->
+        val name = req.request().getParam("name")
+        val user = userRepositoryImpl.removeUser(name)
+        user.subscribe(
+                { res ->
+                    req.response()
+                            .putHeader("content-type", "text/plain")
+                            .end("User $name deleted!")
+                },
+                { err ->
+                    req.response()
+                            .putHeader("content-type", "text/html")
+                            .end(err.toString())
+                }
+        )
+    }
+
     router.route(HttpMethod.PUT, "/user").handler(BodyHandler.create())
     router.route(HttpMethod.PUT, "/user").handler{ req ->
         val newUser = User.fromJson(req.bodyAsJson)

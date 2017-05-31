@@ -15,5 +15,5 @@ interface UserRepository {
 
     fun addUser(user: User): Single<String>
     fun updateUser(user: User): Single<Boolean>
-    fun removeUser(user: User): Single<Boolean>
+    fun removeUser(name: String): Single<Boolean>
 }
