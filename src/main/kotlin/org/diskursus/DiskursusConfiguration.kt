@@ -5,9 +5,7 @@ package org.diskursus
  *
  * @author Alex Xandra Albert Sim
  */
-class DiskursusConfiguration {
-    companion object {
-        val HttpPort = "http_port"
-        val UserDocName = "users_doc"
-    }
+object DiskursusConfiguration {
+    val HttpPort = "http_port"
+    val UserDocName = "users_doc"
 }
