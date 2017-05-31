@@ -11,8 +11,7 @@ import javax.inject.Inject
  *
  * @author Alex Xandra Albert Sim
  */
-class MainController @Inject constructor(override val router: Router,
-                                         val mongoClient: MongoClient): Controller({
+class MainController @Inject constructor(override val router: Router): Controller({
     router.route("/").handler{ req ->
         req.response()
                 .putHeader("content-type", "text/html")
