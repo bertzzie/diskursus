@@ -81,4 +81,22 @@ class MainController @Inject constructor(override val router: Router,
                 }
         )
     }
+
+    router.route(HttpMethod.POST, "/user").handler(BodyHandler.create())
+    router.route(HttpMethod.POST, "/user").handler{ req ->
+        val newUser = User.fromJson(req.bodyAsJson)
+
+        userRepositoryImpl.updateUser(newUser).subscribe(
+                { res ->
+                    req.response()
+                            .putHeader("content-type", "application/json")
+                            .end(req.bodyAsString)
+                },
+                { err ->
+                    req.response()
+                            .putHeader("content-type", "text/html")
+                            .end(err.toString())
+                }
+        )
+    }
 })
