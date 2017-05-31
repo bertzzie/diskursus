@@ -41,19 +41,17 @@ class MainController @Inject constructor(override val router: Router,
                 { res ->
                     val sb = StringBuffer()
                     for (user in res) {
-                        println(user.id)
                         sb.append(Json.encode(user.toJson()))
                     }
 
                     req.response()
                        .putHeader("content-type", "application/json")
-                       .end("test")
+                       .end(sb.toString())
                 },
                 { err ->
                     req.response()
-                       .setStatusCode(500)
-                       .putHeader("content-type", "plain/text")
-                       .end(err.message)
+                       .putHeader("content-type", "text/html")
+                       .end(err.toString())
                 }
         )
     }

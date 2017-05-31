@@ -17,8 +17,7 @@ import org.mindrot.jbcrypt.BCrypt
  *
  * @author Alex Xandra Albert Sim
  */
-data class User(val id: Long,
-                val name: String,
+data class User(val name: String,
                 val email: String,
                 val password: String,
                 val picture: String,
@@ -28,7 +27,6 @@ data class User(val id: Long,
                 val registerTime: DateTime): AbstractUser() {
     companion object {
         fun getDefaultUser(): User = User(
-                1,
                 "admin",
                 "admin@diskursus.org",
                 BCrypt.hashpw("admin", BCrypt.gensalt()),
@@ -40,14 +38,13 @@ data class User(val id: Long,
         )
 
         fun fromJson(obj: JsonObject): User = User(
-                id = obj.getLong("id"),
                 name = obj.getString("name"),
                 email = obj.getString("email"),
                 password = obj.getString("password"),
                 picture = obj.getString("picture"),
                 status = UserStatus.fromString(obj.getString("status")),
                 role = UserRole.fromString(obj.getString("role")),
-                lastLogin = DateTime.parse(obj.getString("lastLogin")),
+                lastLogin = if(obj.getString("lastLogin") == null) null else DateTime.parse(obj.getString("lastLogin")),
                 registerTime = DateTime.parse(obj.getString("registerTime"))
         )
     }
@@ -66,14 +63,14 @@ data class User(val id: Long,
 
     fun toJson(): JsonObject = json {
         obj(
-                "id" to id,
                 "name" to name,
                 "email" to email,
+                "password" to password,
                 "picture" to picture,
                 "status" to status.toString(),
                 "role" to role.toString(),
-                "lastLogin" to lastLogin?.toFullDateTimeString(),
-                "registerTime" to registerTime.toFullDateTimeString()
+                "lastLogin" to lastLogin?.toString(),
+                "registerTime" to registerTime.toString()
         )
     }
 }

@@ -21,7 +21,6 @@ class UserRepositoryImpl @Inject constructor(val client: MongoClient) : UserRepo
 
     override fun getAllUsers(): Single<List<User>> {
         val result = single<List<JsonObject>> { client.find(docName, json { obj() }, it) }
-
         return result.map { r -> r.map { u -> User.fromJson(u) } }
     }
 
