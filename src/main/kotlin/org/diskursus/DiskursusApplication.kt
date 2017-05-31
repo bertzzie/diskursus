@@ -8,6 +8,7 @@ import io.vertx.kotlin.core.json.obj
 import io.vertx.kotlin.config.ConfigRetrieverOptions
 import io.vertx.kotlin.config.ConfigStoreOptions
 import org.diskursus.module.DaggerApplicationComponent
+import org.diskursus.module.VertxModule
 
 /**
  * [Documentation Here]
@@ -25,7 +26,9 @@ class DiskursusApplication {
                     println("Server failed to start when loading config. Cause: ${config.cause()}")
                 } else {
                     val configResult = config.result()
-                    val app = DaggerApplicationComponent.builder().build()
+                    val app = DaggerApplicationComponent.builder()
+                            .vertxModule(VertxModule(vertx, configResult))
+                            .build()
 
                     vertx.deployVerticle(app.mainVerticle(), DeploymentOptions().apply {
                         this.config = configResult
