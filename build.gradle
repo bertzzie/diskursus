@@ -7,6 +7,8 @@ buildscript {
     ext.junit_version = '4.12'
     ext.dagger_version = '2.10'
     ext.jackson_version = '2.9.0.pr2'
+    ext.jodatime_version = '2.9.9'
+    ext.jbcrypt_version = '0.4'
 
     repositories {
         jcenter()
@@ -72,6 +74,9 @@ dependencies {
     compile "io.vertx:vertx-lang-kotlin:$vertx_version"
     compile "io.vertx:vertx-web:$vertx_version"
     compile "io.vertx:vertx-mongo-client:$vertx_version"
+
+    compile "joda-time:joda-time:$jodatime_version"
+    compile "org.mindrot:jbcrypt:$jbcrypt_version"
 
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jackson_version"

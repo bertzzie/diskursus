@@ -19,6 +19,7 @@ import org.diskursus.module.VertxModule
 class DiskursusApplication {
     companion object {
         @JvmStatic fun main(args: Array<String>) {
+            println("Starting Diskursus...")
             val vertx = Vertx.vertx()
 
             val configRetriever = configRetriever(vertx)
@@ -32,6 +33,12 @@ class DiskursusApplication {
                             .mongoModule(MongoModule(vertx, configResult))
                             .build()
 
+                    // data initializer
+                    println("Running data initializer for default user (if not exists)...")
+                    val initializer = app.initializer()
+                    initializer()
+
+                    println("Deploying main verticle...")
                     vertx.deployVerticle(app.mainVerticle(), DeploymentOptions().apply {
                         this.config = configResult
                     })

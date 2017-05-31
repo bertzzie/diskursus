@@ -2,6 +2,7 @@ package org.diskursus.module
 
 import dagger.Component
 import org.diskursus.verticle.MainVerticle
+import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -13,4 +14,6 @@ import javax.inject.Singleton
 @Component(modules = arrayOf(VertxModule::class, MongoModule::class))
 interface ApplicationComponent {
     fun mainVerticle(): MainVerticle
+
+    @Named("dataInitializer") fun initializer(): () -> Unit
 }

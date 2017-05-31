@@ -2,6 +2,7 @@ package org.diskursus.verticle
 
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Future
+import org.diskursus.DiskursusConfiguration
 import org.diskursus.controller.MainController
 import javax.inject.Inject
 
@@ -16,7 +17,7 @@ class MainVerticle @Inject constructor(val mainController: MainController): Abst
 
         vertx.createHttpServer()
                 .requestHandler(router::accept)
-                .listen(config().getInteger("HTTP_PORT", 8080), { result ->
+                .listen(config().getInteger(DiskursusConfiguration.HttpPort, 8080), { result ->
                     if (result.succeeded()) {
                         startFuture?.complete()
                     } else {
