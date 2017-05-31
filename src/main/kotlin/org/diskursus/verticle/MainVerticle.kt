@@ -12,16 +12,16 @@ import javax.inject.Inject
  * @author Alex Xandra Albert Sim
  */
 class MainVerticle @Inject constructor(val mainController: MainController): AbstractVerticle() {
-    override fun start(startFuture: Future<Void>?) {
+    override fun start(startFuture: Future<Void>) {
         val router = mainController.create()
 
         vertx.createHttpServer()
                 .requestHandler(router::accept)
                 .listen(config().getInteger(DiskursusConfiguration.HttpPort, 8080), { result ->
                     if (result.succeeded()) {
-                        startFuture?.complete()
+                        startFuture.complete()
                     } else {
-                        startFuture?.fail(result.cause())
+                        startFuture.fail(result.cause())
                     }
                 })
     }
