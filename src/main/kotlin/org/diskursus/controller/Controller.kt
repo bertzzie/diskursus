@@ -2,9 +2,11 @@ package org.diskursus.controller
 
 import io.vertx.core.Vertx
 import io.vertx.ext.web.Router
+import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.handler.CookieHandler
 import io.vertx.ext.web.handler.SessionHandler
 import io.vertx.ext.web.sstore.LocalSessionStore
+import org.diskursus.DiskursusConfiguration
 
 /**
  * [Documentation Here]
@@ -21,6 +23,21 @@ abstract class Controller(val handlers: Router.() -> Unit) {
             router.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)))
 
             handlers()
+        }
+    }
+
+    companion object {
+        val MustAuthenticateHandler = { context: RoutingContext ->
+            val session = context.session()
+            val isLoggedIn: Boolean? = session.get(DiskursusConfiguration.UserLoginSessionKey)
+
+            if (isLoggedIn != null && isLoggedIn) {
+                context.next()
+            } else {
+                context.response()
+                        .setStatusCode(403)
+                        .end()
+            }
         }
     }
 }

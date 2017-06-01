@@ -6,6 +6,8 @@ import io.vertx.core.http.HttpMethod
 import io.vertx.core.json.Json
 import io.vertx.ext.auth.AuthProvider
 import io.vertx.ext.web.handler.BodyHandler
+import org.diskursus.DiskursusConfiguration
+import org.diskursus.controller.Controller.Companion.MustAuthenticateHandler
 import org.diskursus.model.LoginResponse
 import javax.inject.Inject
 import org.diskursus.model.User
@@ -30,8 +32,8 @@ class UserController @Inject constructor(override val router: Router,
                 val user = User.fromJson(result.principal())
                 val response = LoginResponse(true, user)
 
-                req.session().put("user_logged_in", true)
-                req.session().put("user_info", user)
+                req.session().put(DiskursusConfiguration.UserLoginSessionKey, true)
+                req.session().put(DiskursusConfiguration.UserInfoSessionKey, user)
 
                 req.response()
                    .putHeader("content-type", "application/json")
