@@ -50,7 +50,7 @@ data class User(val name: String,
     }
 
     override fun principal(): JsonObject {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return this.toJson()
     }
 
     override fun setAuthProvider(authProvider: AuthProvider?) {

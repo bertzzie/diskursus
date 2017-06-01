@@ -6,6 +6,7 @@ import io.vertx.core.http.HttpMethod
 import io.vertx.core.json.Json
 import io.vertx.ext.auth.AuthProvider
 import io.vertx.ext.web.handler.BodyHandler
+import org.diskursus.model.LoginResponse
 import javax.inject.Inject
 import org.diskursus.model.User
 import org.diskursus.repository.UserRepository
@@ -26,10 +27,21 @@ class UserController @Inject constructor(override val router: Router,
         authProvider.authenticate(userData, { res ->
             if(res.succeeded()) {
                 val result = res.result()
+                val user = User.fromJson(result.principal())
+                val response = LoginResponse(true, user)
 
-                req.response().putHeader("content-type", "text/plain").end("Auth success!")
+                req.session().put("user_logged_in", true)
+                req.session().put("user_info", user)
+
+                req.response()
+                   .putHeader("content-type", "application/json")
+                   .end(Json.encode(response.toJson()))
             } else {
-                req.response().putHeader("content-type", "text/plain").end("Auth failed!!")
+                val response = LoginResponse(false)
+
+                req.response()
+                   .putHeader("content-type", "application/json")
+                   .end(Json.encode(response.toJson()))
             }
         })
     }
