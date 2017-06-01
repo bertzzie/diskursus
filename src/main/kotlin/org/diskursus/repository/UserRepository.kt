@@ -16,4 +16,6 @@ interface UserRepository {
     fun addUser(user: User): Single<String>
     fun updateUser(user: User): Single<Boolean>
     fun removeUser(name: String): Single<Boolean>
+
+    fun authenticate(name: String, password: String): Single<User?>
 }

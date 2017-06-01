@@ -10,6 +10,7 @@ import io.vertx.kotlin.core.json.obj
 import org.diskursus.ext.single
 import org.diskursus.model.User
 import org.diskursus.repository.UserRepository
+import org.mindrot.jbcrypt.BCrypt
 import rx.Single
 import javax.inject.Inject
 
@@ -62,5 +63,12 @@ class UserRepositoryImpl @Inject constructor(val client: MongoClient) : UserRepo
         }
 
         return result.map{ r -> r.removedCount == 1L }
+    }
+
+    override fun authenticate(name: String, password: String): Single<User?> {
+        return getUserData(name).map{ user ->
+            if (BCrypt.checkpw(password, user.password)) user
+            else null
+        }
     }
 }

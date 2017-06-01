@@ -9,7 +9,9 @@ import dagger.Provides
 import io.vertx.core.Vertx
 import io.vertx.core.json.Json
 import io.vertx.core.json.JsonObject
+import io.vertx.ext.auth.AuthProvider
 import io.vertx.ext.web.Router
+import org.diskursus.repository.UserRepository
 import javax.inject.Singleton
 
 /**
@@ -31,6 +33,12 @@ class VertxModule(val vertx: Vertx, val config: JsonObject) {
             registerModule(ParameterNamesModule())
             registerModule(JavaTimeModule())
         }
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthService(userRepository: UserRepository): AuthProvider {
+        return AuthenticationService(userRepository)
     }
 
     @Provides
