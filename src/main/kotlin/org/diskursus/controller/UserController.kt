@@ -1,5 +1,6 @@
 package org.diskursus.controller
 
+import io.vertx.core.Vertx
 import io.vertx.ext.web.Router
 import io.vertx.core.http.HttpMethod
 import io.vertx.core.json.Json
@@ -15,6 +16,7 @@ import org.diskursus.repository.UserRepository
  * @author Alex Xandra Albert Sim
  */
 class UserController @Inject constructor(override val router: Router,
+                                         override val vertx: Vertx,
                                          val userRepository: UserRepository,
                                          val authProvider: AuthProvider): Controller({
 

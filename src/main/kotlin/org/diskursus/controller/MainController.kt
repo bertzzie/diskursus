@@ -1,5 +1,6 @@
 package org.diskursus.controller
 
+import io.vertx.core.Vertx
 import io.vertx.ext.web.Router
 import javax.inject.Inject
 
@@ -9,6 +10,7 @@ import javax.inject.Inject
  * @author Alex Xandra Albert Sim
  */
 class MainController @Inject constructor(override val router: Router,
+                                         override val vertx: Vertx,
                                          val userController: UserController): Controller({
     mountSubRouter("/user/", userController.create())
 
