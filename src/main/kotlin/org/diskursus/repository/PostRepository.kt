@@ -9,7 +9,7 @@ import rx.Single
  * @author Alex Xandra Albert Sim
  */
 interface PostRepository {
-    fun getPosts(cursor: String, perPage: Int = 5): Single<List<Post>>
+    fun getPosts(cursor: String?, perPage: Int = 5): Single<List<Post>>
     fun getPost(id: String): Single<Post>
 
     fun createPost(post: Post): Single<String>

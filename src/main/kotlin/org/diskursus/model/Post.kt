@@ -17,14 +17,32 @@ data class Post(val _id: String,
                 val createdAt: DateTime = DateTime.now(),
                 val updatedAt: DateTime = DateTime.now()) {
     companion object {
-        fun fromJson(json: JsonObject): Post = Post(
-                _id = json.getString("_id"),
-                content = json.getString("content"),
-                poster = json.getString("poster"),
-                pictures = json.getJsonArray("pictures").map{ it.toString() },
-                createdAt = DateTime.parse(json.getString("createdAt")),
-                updatedAt = DateTime.parse(json.getString("updatedAt"))
-        )
+        fun fromJson(json: JsonObject): Post {
+            val createdAt = if(json.getString("createdAt") == null) {
+                DateTime.now()
+            } else {
+                DateTime.parse(json.getString("createdAt"))
+            }
+
+            val updatedAt = if(json.getString("updatedAt") == null) {
+                DateTime.now()
+            } else {
+                DateTime.parse(json.getString("updatedAt"))
+            }
+
+            val pictures = if (json.getJsonArray("pictures") == null) {
+                listOf()
+            } else {
+                json.getJsonArray("pictures").map{ it.toString() }
+            }
+
+            return Post(_id = if (json.getString("_id") == null) "" else json.getString("_id"),
+                        content = json.getString("content"),
+                        poster = json.getString("poster"),
+                        pictures = pictures,
+                        createdAt = createdAt,
+                        updatedAt = updatedAt)
+        }
     }
 
     fun toJson(): JsonObject = json {
