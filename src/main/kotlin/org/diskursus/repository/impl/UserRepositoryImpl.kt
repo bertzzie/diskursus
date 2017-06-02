@@ -1,6 +1,5 @@
 package org.diskursus.repository.impl
 
-import io.vertx.core.json.Json
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.mongo.MongoClient
 import io.vertx.ext.mongo.MongoClientDeleteResult
