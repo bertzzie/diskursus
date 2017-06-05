@@ -52,7 +52,7 @@ export default class App extends Component {
 			<div id="app">
 				<Header userInfo={this.state.userInfo} />
 				<Router onChange={this.handleRoute}>
-					<Home path="/" />
+					<Home path="/" userInfo={this.state.userInfo} />
 					<Chat path="/chat/" user="me" />
                     <Login path="/login/" />
                     <Register path="/register" />

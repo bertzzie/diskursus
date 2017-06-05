@@ -1,8 +1,35 @@
 @import '~style/helpers';
 
 .home {
-	padding: 56px 20px;
-	min-height: 100%;
-	width: 100%;
+  padding: 56px 20px;
+  min-height: 100%;
+  width: 100%;
+
+  &:after {
+    clear: both;
+  }
+}
+
+.post {
+  margin: 1.5em auto;
+  max-width: 960px;
+
+  p {
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+}
+
+.postAuthor {
+  padding: 4px;
+  font-weight: bold;
+
+  img {
+    float: left;
+    height: 64px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    width: 64px;
+  }
 }
 

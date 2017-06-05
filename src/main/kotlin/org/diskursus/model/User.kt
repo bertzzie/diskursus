@@ -37,6 +37,17 @@ data class User(val name: String,
                 DateTime.now()
         )
 
+        fun fromClientJson(obj: JsonObject): User =User(
+                name = obj.getString("name"),
+                email = obj.getString("email"),
+                password = "",
+                picture = obj.getString("picture"),
+                status = UserStatus.ACTIVE,
+                role = UserRole.fromString(obj.getString("role")),
+                lastLogin = null,
+                registerTime = DateTime.now()
+        )
+
         fun fromJson(obj: JsonObject): User = User(
                 name = obj.getString("name"),
                 email = obj.getString("email"),
@@ -66,7 +77,8 @@ data class User(val name: String,
                 "name" to name,
                 "email" to email,
                 "picture" to picture,
-                "status" to status.toString()
+                "status" to status.toString(),
+                "role" to role.toString()
         )
     }
 

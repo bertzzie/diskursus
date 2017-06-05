@@ -39,6 +39,16 @@ class UserRepositoryImpl @Inject constructor(val client: MongoClient) : UserRepo
         return result.map { r -> User.fromJson(r) }
     }
 
+    override fun getUserDataFromID(id: String): Single<User> {
+        val result = single<JsonObject> {
+            client.findOne(docName, json { obj ( "_id" to id ) }, null, it)
+        }
+
+        return result.map{ r ->
+            User.fromJson(r)
+        }
+    }
+
     override fun addUser(user: User): Single<String> {
         return single<String> {
             client.insert(docName, user.toJson(), it)

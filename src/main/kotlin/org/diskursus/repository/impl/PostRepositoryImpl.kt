@@ -22,7 +22,7 @@ class PostRepositoryImpl @Inject constructor(val client: MongoClient): PostRepos
     val docName = "posts"
 
     override fun getPosts(cursor: String?, perPage: Int): Single<List<Post>> {
-        val options = FindOptions(null, perPage, null, json { obj("updatedAt" to 1) })
+        val options = FindOptions(null, perPage, null, json { obj("updatedAt" to -1) })
         val query = if (cursor == null) {
             json { obj() }
         } else {

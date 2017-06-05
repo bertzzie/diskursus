@@ -12,7 +12,7 @@ import org.joda.time.DateTime
  */
 data class Post(val _id: String,
                 val content: String,
-                val poster: String,
+                val poster: User,
                 val pictures: List<String> = listOf(),
                 val createdAt: DateTime = DateTime.now(),
                 val updatedAt: DateTime = DateTime.now()) {
@@ -38,7 +38,7 @@ data class Post(val _id: String,
 
             return Post(_id = if (json.getString("_id") == null) "" else json.getString("_id"),
                         content = json.getString("content"),
-                        poster = json.getString("poster"),
+                        poster = User.fromClientJson(json.getJsonObject("poster")),
                         pictures = pictures,
                         createdAt = createdAt,
                         updatedAt = updatedAt)
@@ -49,7 +49,7 @@ data class Post(val _id: String,
         obj(
                 "_id" to _id,
                 "content" to content,
-                "poster" to poster,
+                "poster" to poster.toPublicJson(),
                 "pictures" to pictures,
                 "createdAt" to createdAt.toString(),
                 "updatedAt" to updatedAt.toString()
@@ -59,7 +59,7 @@ data class Post(val _id: String,
     fun toJsonWithoutId(): JsonObject = json {
         obj(
                 "content" to content,
-                "poster" to poster,
+                "poster" to poster.toPublicJson(),
                 "pictures" to pictures,
                 "createdAt" to createdAt.toString(),
                 "updatedAt" to updatedAt.toString()

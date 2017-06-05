@@ -1,0 +1,61 @@
+import { h, Component } from 'preact';
+import style from './style';
+
+import 'whatwg-fetch'
+
+export default class NewPostEditor extends Component {
+    state = {
+        value: ""
+    };
+
+    handleChange = evt => {
+        this.setState({
+            value: evt.target.value
+        });
+    };
+
+    handleEnterPressed = evt => {
+        if(evt.key === 'Enter') {
+            fetch('http://localhost:8082/post/add', {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'content': evt.target.value,
+                    'poster': {
+                        name: this.props.userInfo.name,
+                        email: this.props.userInfo.email,
+                        picture: this.props.userInfo.picture,
+                        role: this.props.userInfo.role
+                    }
+                })
+            }).then(resp => {
+                if (resp.status === 201) {
+                    this.setState({
+                        value: ""
+                    })
+                }
+
+                return resp.json()
+            })
+        }
+    };
+
+    render() {
+        const user = this.props.userInfo;
+        return (
+            <div class={style.editor}>
+                <aside class={style.postAuthor}>
+                    <img src={user.picture} alt={user.name} />
+                    { user.name }
+                </aside>
+
+                <textarea onChange={this.handleChange}
+                          onKeyPress={this.handleEnterPressed}
+                          value={this.state.value} />
+            </div>
+        );
+    }
+}
