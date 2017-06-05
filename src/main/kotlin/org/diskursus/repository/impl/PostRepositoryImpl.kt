@@ -26,7 +26,7 @@ class PostRepositoryImpl @Inject constructor(val client: MongoClient): PostRepos
         val query = if (cursor == null) {
             json { obj() }
         } else {
-            json{ obj( "_id" to cursor ) }
+            json{ obj( "_id" to obj("\$lt" to cursor) ) } // less than because we always sort descending
         }
 
         val result = single<List<JsonObject>> {

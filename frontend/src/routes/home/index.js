@@ -18,6 +18,7 @@ export default class Home extends Component {
 
     state = {
         posts: [],
+        hasMore: true,
     };
 
 	componentDidMount() {
@@ -31,6 +32,19 @@ export default class Home extends Component {
             })
 	}
 
+	loadMore = () => {
+        const that = this;
+        const cursor = this.state.posts[this.state.posts.length - 1]['_id'];
+        fetch(`http://localhost:8082/post/list?cursor=${cursor}`, { credentials: "include" })
+            .then(r => r.json())
+            .then(response => {
+                that.setState({
+                    posts: this.state.posts.concat(response),
+                    hasMore: response.length !== 0
+                })
+            })
+    };
+
 	renderPost = post => {
 	    return(
 	        <article class={style.post}>
@@ -40,7 +54,7 @@ export default class Home extends Component {
                 </aside>
                 <p>{ post.content }</p>
 
-                <hr style="clear: both;" />
+                <hr class={style.postSeparator} />
             </article>
         )
     };
@@ -49,9 +63,19 @@ export default class Home extends Component {
 		return (
 			<div class={style.home}>
                 {
-                    (this.props.userInfo.isLoggedIn) ? <NewPostEditor userInfo={this.props.userInfo} /> : null
+                    this.props.userInfo.isLoggedIn ? <NewPostEditor userInfo={this.props.userInfo} /> : null
                 }
                 { this.state.posts.map(this.renderPost) }
+
+                {
+                    this.state.hasMore ?
+                      <div class={style.loadMore}>
+                          <input type="button"
+                                 value="Lihat Selebihnya"
+                                 onClick={this.loadMore} />
+                      </div> :
+                      null
+                }
 			</div>
 		);
 	}
