@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import style from './style';
+import Config from '../../Config';
 
 import 'whatwg-fetch'
 
@@ -20,7 +21,7 @@ export default class Login extends Component {
     handleFormSubmit = e => {
         e.preventDefault();
 
-        fetch("http://localhost:8082/user/authenticate", {
+        fetch(`${Config.Hostname}/user/authenticate`, {
             method: "POST",
             credentials: "include",
             headers: {

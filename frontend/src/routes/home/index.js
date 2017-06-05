@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import style from './style';
+import Config from '../../Config';
 
 import 'whatwg-fetch'
 
@@ -23,7 +24,7 @@ export default class Home extends Component {
 
 	componentDidMount() {
 	    const that = this;
-		fetch("http://localhost:8082/post/list", { credentials: "include" })
+		fetch(`${Config.Hostname}/post/list`, { credentials: "include" })
             .then(r => r.json())
             .then(response => {
                 that.setState({
@@ -35,7 +36,7 @@ export default class Home extends Component {
 	loadMore = () => {
         const that = this;
         const cursor = this.state.posts[this.state.posts.length - 1]['_id'];
-        fetch(`http://localhost:8082/post/list?cursor=${cursor}`, { credentials: "include" })
+        fetch(`${Config.Hostname}/post/list?cursor=${cursor}`, { credentials: "include" })
             .then(r => r.json())
             .then(response => {
                 that.setState({

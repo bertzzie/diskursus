@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import { Router } from 'preact-router';
+import Config from '../Config';
 
 import 'whatwg-fetch';
 
@@ -28,7 +29,7 @@ export default class App extends Component {
 
     updateUserInfo = () => {
         const that = this;
-        fetch("http://localhost:8082/user/info", { credentials: "include" })
+        fetch(`${Config.Hostname}/user/info`, { credentials: "include" })
             .then(r => r.json())
             .then(response => {
                 that.setState({

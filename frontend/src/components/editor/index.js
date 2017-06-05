@@ -1,6 +1,8 @@
 import { h, Component } from 'preact';
 import style from './style';
 
+import Config from '../../Config';
+
 import 'whatwg-fetch'
 
 export default class NewPostEditor extends Component {
@@ -16,7 +18,7 @@ export default class NewPostEditor extends Component {
 
     handleEnterPressed = evt => {
         if(evt.key === 'Enter') {
-            fetch('http://localhost:8082/post/add', {
+            fetch(`${Config.Hostname}/post/add`, {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
