@@ -11,6 +11,7 @@ import org.diskursus.controller.Controller.Companion.MustAuthenticateHandler
 import org.diskursus.model.LoginResponse
 import javax.inject.Inject
 import org.diskursus.model.User
+import org.diskursus.model.UserInfo
 import org.diskursus.repository.UserRepository
 
 /**
@@ -48,13 +49,29 @@ class UserController @Inject constructor(override val router: Router,
         })
     }
 
+    router.route("/info").handler{ req ->
+        val user = req.session().get<User>(DiskursusConfiguration.UserInfoSessionKey)
+        val isLoggedIn = req.session().get<Boolean>(DiskursusConfiguration.UserLoginSessionKey)
+        val userInfo = UserInfo(
+                isLoggedIn ?: false,
+                user?.name,
+                user?.email,
+                user?.picture,
+                user?.role?.toString()
+        )
+
+        req.response()
+           .putHeader("content-type", "application/json")
+           .end(Json.encode(userInfo.toJson()))
+    }
+
     router.route("/list").handler{ req ->
         val users = userRepository.getAllUsers()
         users.subscribe(
                 { res ->
                     val sb = StringBuffer()
                     for (user in res) {
-                        sb.append(Json.encode(user.toJson()))
+                        sb.append(Json.encode(user.toPublicJson()))
                     }
 
                     req.response()
@@ -76,7 +93,7 @@ class UserController @Inject constructor(override val router: Router,
                 { res ->
                     req.response()
                             .putHeader("content-type", "application/json")
-                            .end(Json.encode(res.toJson()))
+                            .end(Json.encode(res.toPublicJson()))
                 },
                 { err ->
                     req.response()
@@ -86,6 +103,7 @@ class UserController @Inject constructor(override val router: Router,
         )
     }
 
+    router.route(HttpMethod.DELETE, "/:name/delete").handler(MustAuthenticateHandler)
     router.route(HttpMethod.DELETE, "/:name/delete").handler{ req ->
         val name = req.request().getParam("name")
         val user = userRepository.removeUser(name)
@@ -103,6 +121,7 @@ class UserController @Inject constructor(override val router: Router,
         )
     }
 
+    router.route(HttpMethod.PUT, "/add").handler(MustAuthenticateHandler)
     router.route(HttpMethod.PUT, "/add").handler(BodyHandler.create())
     router.route(HttpMethod.PUT, "/add").handler{ req ->
         val newUser = User.fromJson(req.bodyAsJson)
@@ -121,6 +140,7 @@ class UserController @Inject constructor(override val router: Router,
         )
     }
 
+    router.route(HttpMethod.POST, "/update").handler(MustAuthenticateHandler)
     router.route(HttpMethod.POST, "/update").handler(BodyHandler.create())
     router.route(HttpMethod.POST, "/update").handler{ req ->
         val newUser = User.fromJson(req.bodyAsJson)

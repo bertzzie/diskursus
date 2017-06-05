@@ -61,6 +61,15 @@ data class User(val name: String,
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    fun toPublicJson(): JsonObject = json {
+        obj(
+                "name" to name,
+                "email" to email,
+                "picture" to picture,
+                "status" to status.toString()
+        )
+    }
+
     fun toJson(): JsonObject = json {
         obj(
                 "name" to name,
