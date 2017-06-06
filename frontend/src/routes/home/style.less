@@ -11,19 +11,24 @@
 }
 
 .post {
+  border: 1px solid rgba(128, 128, 128, 0.3);
   margin: 1.5em auto;
   max-width: 960px;
+  padding-top: 7px;
 
-  p {
+  .postContent {
     margin-bottom: 0;
     margin-top: 0;
+    padding: 0 10px 10px 10px;
+    text-align: justify;
   }
 
-  .postSeparator {
-    border-color: rgba(255, 141, 0, 0.2);
+  .postSeparator,
+  .commentSeparator {
+    border: 0;
     clear: both;
-    margin-top: 1.5em;
-    width: 45%
+    margin: 0;
+    padding: 0;
   }
 }
 

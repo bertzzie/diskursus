@@ -90,8 +90,8 @@ data class User(val name: String,
                 "picture" to picture,
                 "status" to status.toString(),
                 "role" to role.toString(),
-                "lastLogin" to lastLogin?.toString(),
-                "registerTime" to registerTime.toString()
+                "lastLogin" to lastLogin?.millis?.div(1000),
+                "registerTime" to registerTime.millis / 1000
         )
     }
 }

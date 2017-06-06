@@ -17,26 +17,6 @@ import javax.inject.Inject
 class CommentController @Inject constructor(override val router: Router,
                                             override val vertx: Vertx,
                                             val commentRepository: CommentRepository): Controller({
-    route("/get/:postId").handler{ req ->
-        val postId = req.request().getParam("postId")
-        val cursor = req.request().getParam("cursor")
-        val count = req.request().getParam("count") ?: "5"
-
-        commentRepository.getCommentsByPost(postId, cursor, count.toInt())
-                         .subscribe(
-                                 { result ->
-                                     req.response()
-                                        .putHeader("content-type", "application/json")
-                                        .end(Json.encode(result))
-                                 },
-                                 { err ->
-                                     req.response()
-                                        .putHeader("content-type", "text/html")
-                                        .end(err.toString())
-                                 }
-                         )
-    }
-
     route(HttpMethod.PUT, "/add").handler(MustAuthenticateHandler)
     route(HttpMethod.PUT, "/add").handler(BodyHandler.create())
     route(HttpMethod.PUT, "/add").handler{ req ->

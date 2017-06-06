@@ -4,6 +4,7 @@ import Config from '../../Config';
 
 import 'whatwg-fetch'
 
+import Comments from '../../components/comments';
 import NewPostEditor from '../../components/editor';
 
 export default class Home extends Component {
@@ -47,13 +48,17 @@ export default class Home extends Component {
     };
 
 	renderPost = post => {
-	    return(
-	        <article class={style.post}>
+        return(
+            <article class={style.post}>
                 <aside class={style.postAuthor}>
                     <img src={post.poster.picture} alt={post.poster.name} />
                     { post.poster.name }
                 </aside>
-                <p>{ post.content }</p>
+                <div class={style.postContent}>{ post.content }</div>
+
+                <hr class={style.commentSeparator} />
+
+                <Comments postId={post._id} />
 
                 <hr class={style.postSeparator} />
             </article>

@@ -51,8 +51,8 @@ data class Post(val _id: String,
                 "content" to content,
                 "poster" to poster.toPublicJson(),
                 "pictures" to pictures,
-                "createdAt" to createdAt.toString(),
-                "updatedAt" to updatedAt.toString()
+                "createdAt" to createdAt.millis / 1000,
+                "updatedAt" to updatedAt.millis / 1000
         )
     }
 
@@ -61,8 +61,8 @@ data class Post(val _id: String,
                 "content" to content,
                 "poster" to poster.toPublicJson(),
                 "pictures" to pictures,
-                "createdAt" to createdAt.toString(),
-                "updatedAt" to updatedAt.toString()
+                "createdAt" to createdAt.millis / 1000,
+                "updatedAt" to updatedAt.millis / 1000
         )
     }
 }

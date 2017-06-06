@@ -45,8 +45,8 @@ data class Comment(val _id: String,
                 "postId" to postId,
                 "content" to content,
                 "poster" to poster.toPublicJson(),
-                "createdAt" to createdAt.toString(),
-                "updatedAt" to updatedAt.toString()
+                "createdAt" to createdAt.millis / 1000,
+                "updatedAt" to updatedAt.millis / 1000
         )
     }
 
@@ -55,8 +55,8 @@ data class Comment(val _id: String,
                 "postId" to postId,
                 "content" to content,
                 "poster" to poster.toPublicJson(),
-                "createdAt" to createdAt.toString(),
-                "updatedAt" to updatedAt.toString()
+                "createdAt" to createdAt.millis / 1000,
+                "updatedAt" to updatedAt.millis / 1000
         )
     }
 }

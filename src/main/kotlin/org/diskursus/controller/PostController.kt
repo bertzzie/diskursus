@@ -8,6 +8,7 @@ import io.vertx.ext.web.handler.BodyHandler
 import org.diskursus.ext.single
 import org.diskursus.model.FullPost
 import org.diskursus.model.Post
+import org.diskursus.repository.CommentRepository
 import org.diskursus.repository.PostRepository
 import org.diskursus.repository.UserRepository
 import javax.inject.Inject
@@ -19,7 +20,8 @@ import javax.inject.Inject
  */
 class PostController @Inject constructor(override val router: Router,
                                          override val vertx: Vertx,
-                                         val postRepository: PostRepository): Controller({
+                                         val postRepository: PostRepository,
+                                         val commentRepository: CommentRepository): Controller({
 
     route("/list").handler{ req ->
         val cursor = req.request().getParam("cursor")
@@ -38,6 +40,28 @@ class PostController @Inject constructor(override val router: Router,
                 }
         )
     }
+
+    route("/:postId/comments").handler{ req ->
+        val postId = req.request().getParam("postId")
+        val cursor = req.request().getParam("cursor")
+        val count = req.request().getParam("count") ?: "5"
+
+        commentRepository.getCommentsByPost(postId, cursor, count.toInt())
+                .subscribe(
+                        { result ->
+                            val finalResult = result.map{r -> r.toJson()}
+                            req.response()
+                                    .putHeader("content-type", "application/json")
+                                    .end(Json.encode(finalResult))
+                        },
+                        { err ->
+                            req.response()
+                                    .putHeader("content-type", "text/html")
+                                    .end(err.toString())
+                        }
+                )
+    }
+
 
     route(HttpMethod.PUT, "/add").handler(MustAuthenticateHandler)
     route(HttpMethod.PUT, "/add").handler(BodyHandler.create())
