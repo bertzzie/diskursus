@@ -12,9 +12,11 @@ import javax.inject.Inject
 class MainController @Inject constructor(override val router: Router,
                                          override val vertx: Vertx,
                                          val userController: UserController,
-                                         val postController: PostController): Controller({
+                                         val postController: PostController,
+                                         val commentController: CommentController): Controller({
     mountSubRouter("/user/", userController.create())
     mountSubRouter("/post/", postController.create())
+    mountSubRouter("/comment/", commentController.create())
 
     router.route("/").handler{ req ->
         req.response()

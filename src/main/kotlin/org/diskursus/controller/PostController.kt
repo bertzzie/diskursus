@@ -19,8 +19,7 @@ import javax.inject.Inject
  */
 class PostController @Inject constructor(override val router: Router,
                                          override val vertx: Vertx,
-                                         val postRepository: PostRepository,
-                                         val userRepository: UserRepository): Controller({
+                                         val postRepository: PostRepository): Controller({
 
     route("/list").handler{ req ->
         val cursor = req.request().getParam("cursor")

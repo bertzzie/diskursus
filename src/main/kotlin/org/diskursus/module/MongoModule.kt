@@ -9,8 +9,10 @@ import io.vertx.kotlin.core.json.json
 import io.vertx.kotlin.core.json.obj
 import org.diskursus.DiskursusConfiguration
 import org.diskursus.model.User
+import org.diskursus.repository.CommentRepository
 import org.diskursus.repository.PostRepository
 import org.diskursus.repository.UserRepository
+import org.diskursus.repository.impl.CommentRepositoryImpl
 import org.diskursus.repository.impl.PostRepositoryImpl
 import org.diskursus.repository.impl.UserRepositoryImpl
 import javax.inject.Named
@@ -67,5 +69,11 @@ class MongoModule(val vertx: Vertx, val config: JsonObject) {
     @Singleton
     fun providePostRepository(): PostRepository {
         return PostRepositoryImpl(provideMongoClient())
+    }
+
+    @Provides
+    @Singleton
+    fun provideCommentRepository(): CommentRepository {
+        return CommentRepositoryImpl(provideMongoClient())
     }
 }
