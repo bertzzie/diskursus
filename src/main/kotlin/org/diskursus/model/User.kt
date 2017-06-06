@@ -48,6 +48,17 @@ data class User(val name: String,
                 registerTime = DateTime.now()
         )
 
+        fun fromToJson(obj: JsonObject): User = User(
+                name = obj.getString("name"),
+                email = obj.getString("email"),
+                password = obj.getString("password"),
+                picture = obj.getString("picture"),
+                status = UserStatus.fromString(obj.getString("status")),
+                role = UserRole.fromString(obj.getString("role")),
+                lastLogin = if(obj.getLong("lastLogin") == null) null else DateTime(obj.getLong("lastLogin")),
+                registerTime = DateTime(obj.getLong("registerTime"))
+        )
+
         fun fromJson(obj: JsonObject): User = User(
                 name = obj.getString("name"),
                 email = obj.getString("email"),

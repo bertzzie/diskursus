@@ -30,7 +30,7 @@ class UserController @Inject constructor(override val router: Router,
         authProvider.authenticate(userData, { res ->
             if(res.succeeded()) {
                 val result = res.result()
-                val user = User.fromJson(result.principal())
+                val user = User.fromToJson(result.principal())
                 val response = LoginResponse(true, user)
 
                 req.session().put(DiskursusConfiguration.UserLoginSessionKey, true)

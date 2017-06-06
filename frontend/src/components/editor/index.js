@@ -41,7 +41,7 @@ export default class NewPostEditor extends Component {
                 }
 
                 return resp.json()
-            })
+            }).then(_ => window.location.reload())
         }
     };
 

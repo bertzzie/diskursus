@@ -44,14 +44,14 @@ class PostRepositoryImpl @Inject constructor(val client: MongoClient): PostRepos
 
     override fun createPost(post: Post): Single<String> {
         return single<String> {
-            client.insert(docName, post.toJsonWithoutId(), it)
+            client.insert(docName, post.toMongoJson(), it)
         }
     }
 
     override fun updatePost(post: Post): Single<Boolean> {
         val query = json { obj("_id" to post._id) }
         val update = json {
-            obj("\$set" to post.toJson())
+            obj("\$set" to post.toFullMongoJson())
         }
 
         val result = single<MongoClientUpdateResult> { client.updateCollection(docName, query, update, it) }

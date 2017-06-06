@@ -56,13 +56,24 @@ data class Post(val _id: String,
         )
     }
 
-    fun toJsonWithoutId(): JsonObject = json {
+    fun toFullMongoJson(): JsonObject = json {
+        obj(
+                "_id" to _id,
+                "content" to content,
+                "poster" to poster.toPublicJson(),
+                "pictures" to pictures,
+                "createdAt" to createdAt.toString(),
+                "updatedAt" to updatedAt.toString()
+        )
+    }
+
+    fun toMongoJson(): JsonObject = json {
         obj(
                 "content" to content,
                 "poster" to poster.toPublicJson(),
                 "pictures" to pictures,
-                "createdAt" to createdAt.millis / 1000,
-                "updatedAt" to updatedAt.millis / 1000
+                "createdAt" to createdAt.toString(),
+                "updatedAt" to updatedAt.toString()
         )
     }
 }

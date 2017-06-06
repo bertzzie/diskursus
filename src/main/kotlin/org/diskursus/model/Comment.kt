@@ -50,13 +50,24 @@ data class Comment(val _id: String,
         )
     }
 
-    fun toJsonWithoutId(): JsonObject = json {
+    fun toFullMongoJson(): JsonObject = json {
+        obj(
+                "_id" to _id,
+                "postId" to postId,
+                "content" to content,
+                "poster" to poster.toPublicJson(),
+                "createdAt" to createdAt.toString(),
+                "updatedAt" to updatedAt.toString()
+        )
+    }
+
+    fun toMongoJson(): JsonObject = json {
         obj(
                 "postId" to postId,
                 "content" to content,
                 "poster" to poster.toPublicJson(),
-                "createdAt" to createdAt.millis / 1000,
-                "updatedAt" to updatedAt.millis / 1000
+                "createdAt" to createdAt.toString(),
+                "updatedAt" to updatedAt.toString()
         )
     }
 }

@@ -49,14 +49,14 @@ class CommentRepositoryImpl @Inject constructor(val client: MongoClient): Commen
 
     override fun createComment(comment: Comment): Single<String> {
         return single<String> {
-            client.insert(docName, comment.toJsonWithoutId(), it)
+            client.insert(docName, comment.toMongoJson(), it)
         }
     }
 
     override fun updateComment(comment: Comment): Single<Boolean> {
         val query = json { obj("_id" to comment._id) }
         val update = json {
-            obj("\$set" to comment.toJson())
+            obj("\$set" to comment.toFullMongoJson())
         }
 
         val result = single<MongoClientUpdateResult> { client.updateCollection(docName, query, update, it) }
