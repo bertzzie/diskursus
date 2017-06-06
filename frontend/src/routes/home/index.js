@@ -58,7 +58,7 @@ export default class Home extends Component {
 
                 <hr class={style.commentSeparator} />
 
-                <Comments postId={post._id} />
+                <Comments postId={post._id} userInfo={this.props.userInfo} />
 
                 <hr class={style.postSeparator} />
             </article>

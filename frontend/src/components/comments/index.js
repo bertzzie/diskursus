@@ -2,6 +2,7 @@ import { h, Component } from 'preact';
 import style from './style';
 
 import Config from '../../Config';
+import NewCommentEditor from './editor';
 
 import 'whatwg-fetch'
 
@@ -43,9 +44,14 @@ export default class Comments extends Component {
     };
 
     render() {
+        const commentList = this.state.comments.length === 0 ? this.renderEmpty() : this.renderFull()
+
         return (
             <div class={style.commentContainer}>
-                { this.state.comments.length === 0 ? this.renderEmpty() : this.renderFull() }
+                { commentList }
+                { this.props.userInfo.isLoggedIn &&
+                      <NewCommentEditor postId={this.props.postId} userInfo={this.props.userInfo} />
+                }
             </div>
         )
     }
