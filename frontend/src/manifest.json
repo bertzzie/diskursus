@@ -1,6 +1,6 @@
 {
-  "name": "Preact PWA",
-  "short_name": "Preact PWA",
+  "name": "DIskursus - Berbagi dalam diskusi",
+  "short_name": "Diskursus",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
