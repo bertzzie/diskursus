@@ -8,22 +8,32 @@ import 'whatwg-fetch'
 
 export default class Comments extends Component {
     static defaultProps = {
-        postId: ""
+        postId: "",
+        commentCount: 5
     };
 
     state = {
-        comments: []
+        comments: [],
+        totalCommentCount: 0,
     };
 
     componentDidMount() {
         const postId = this.props.postId;
-        fetch(`${Config.Hostname}/post/${postId}/comments`)
+        fetch(`${Config.Hostname}/post/${postId}/comments?count=${this.props.commentCount}`)
             .then(r => r.json())
             .then(response => {
                 this.setState({
                     comments: response
                 })
-            })
+            });
+
+        fetch(`${Config.Hostname}/comment/count/${postId}`)
+            .then(r => r.json())
+            .then(response => {
+                this.setState({
+                    totalCommentCount: response.commentCount
+                })
+            });
     }
 
     renderEmpty = () => {
@@ -48,6 +58,13 @@ export default class Comments extends Component {
 
         return (
             <div class={style.commentContainer}>
+                {
+                    this.state.comments.length < this.state.totalCommentCount ?
+                        <div class={style.viewMore}>
+                            <a href={`/post/${this.props.postId}`}>Lihat Semua komentar...</a>
+                        </div> :
+                        null
+                }
                 { commentList }
                 { this.props.userInfo.isLoggedIn &&
                       <NewCommentEditor postId={this.props.postId} userInfo={this.props.userInfo} />

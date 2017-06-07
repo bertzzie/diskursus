@@ -28,13 +28,13 @@ class CommentRepositoryImpl @Inject constructor(val client: MongoClient): Commen
     }
 
     override fun getCommentsByPost(postId: String, cursor: String?, count: Int): Single<List<Comment>> {
-        val options = FindOptions(null, count, null, json { obj("updatedAt" to -1) })
+        val options = FindOptions(null, count, null, json { obj("updatedAt" to 1) })
         val query = if (cursor == null) {
             json { obj( "postId" to postId ) }
         } else {
             json{
                 obj(
-                        "_id" to obj("\$lt" to cursor), // less than because we always sort descending
+                        "_id" to obj("\$gt" to cursor), // greater than because we always sort ascending
                         "postId" to postId
                 )
             }

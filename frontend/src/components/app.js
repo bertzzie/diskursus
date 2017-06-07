@@ -8,6 +8,7 @@ import Header from './header';
 import Chat from '../routes/chat';
 import Home from '../routes/home';
 import Login from '../routes/login';
+import Post from '../routes/post';
 import Register from '../routes/register';
 // import Home from 'async!./home';
 // import Profile from 'async!./profile';
@@ -56,6 +57,7 @@ export default class App extends Component {
 					<Home path="/" userInfo={this.state.userInfo} />
 					<Chat path="/chat/" user="me" />
                     <Login path="/login/" />
+                    <Post path="/post/:postId" />
                     <Register path="/register" />
 				</Router>
 			</div>

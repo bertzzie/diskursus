@@ -41,6 +41,23 @@ class PostController @Inject constructor(override val router: Router,
         )
     }
 
+    route("/view/:postId").handler{ req ->
+        val postId = req.request().getParam("postId")
+
+        postRepository.getPost(postId).subscribe(
+                { result ->
+                    req.response()
+                       .putHeader("content-type", "application/json")
+                       .end(Json.encode(result))
+                },
+                { err ->
+                    req.response()
+                       .putHeader("content-type", "text/html")
+                       .end(err.toString())
+                }
+        )
+    }
+
     route("/:postId/comments").handler{ req ->
         val postId = req.request().getParam("postId")
         val cursor = req.request().getParam("cursor")
@@ -61,7 +78,6 @@ class PostController @Inject constructor(override val router: Router,
                         }
                 )
     }
-
 
     route(HttpMethod.PUT, "/add").handler(MustAuthenticateHandler)
     route(HttpMethod.PUT, "/add").handler(BodyHandler.create())
