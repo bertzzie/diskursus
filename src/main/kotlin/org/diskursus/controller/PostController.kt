@@ -5,9 +5,11 @@ import io.vertx.core.http.HttpMethod
 import io.vertx.core.json.Json
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.BodyHandler
+import org.diskursus.DiskursusConfiguration
 import org.diskursus.ext.single
 import org.diskursus.model.FullPost
 import org.diskursus.model.Post
+import org.diskursus.model.User
 import org.diskursus.repository.CommentRepository
 import org.diskursus.repository.PostRepository
 import org.diskursus.repository.UserRepository
@@ -79,10 +81,20 @@ class PostController @Inject constructor(override val router: Router,
                 )
     }
 
-    route(HttpMethod.PUT, "/add").handler(MustAuthenticateHandler)
-    route(HttpMethod.PUT, "/add").handler(BodyHandler.create())
-    route(HttpMethod.PUT, "/add").handler{ req ->
-        val newPost = Post.fromJson(req.bodyAsJson)
+    route(HttpMethod.POST, "/add").handler(MustAuthenticateHandler)
+    route(HttpMethod.POST, "/add").handler{ req ->
+        req.request().isExpectMultipart = true
+        req.next()
+    }
+    route(HttpMethod.POST, "/add").handler(BodyHandler.create().setMergeFormAttributes(true))
+    route(HttpMethod.POST, "/add").handler{ req ->
+        val formData = req.request().formAttributes()
+        val newPost = Post(
+                _id = "",
+                content = formData.get("content"),
+                poster = req.session().get<User>(DiskursusConfiguration.UserInfoSessionKey)
+        )
+
         postRepository.createPost(newPost).subscribe(
                 { result ->
                     req.response()

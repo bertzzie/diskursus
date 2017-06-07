@@ -3,13 +3,14 @@
   max-width: 960px;
 
   textarea {
-    height: 90px;
+    height: 70px;
     width: 70%;
   }
 }
 
 .postAuthor {
   display: inline-block;
+  float: left;
   font-weight: bold;
   max-width: 100px;
   padding: 4px;
@@ -21,5 +22,25 @@
     margin-bottom: 10px;
     margin-right: 10px;
     width: 64px;
+  }
+}
+
+.formInputs {
+  float: right;
+  width: 70%;
+
+  textarea {
+    display: block;
+    width: 100%;
+  }
+
+  input[type=submit] {
+    background: #0D2FFF;
+    border: 0;
+    color: #FFF;
+    float: right;
+    height: 20px;
+    margin: 15px 0;
+    width: 70px;
   }
 }

@@ -16,48 +16,46 @@ export default class NewPostEditor extends Component {
         });
     };
 
-    handleEnterPressed = evt => {
-        if(evt.key === 'Enter') {
-            fetch(`${Config.Hostname}/post/add`, {
-                method: 'PUT',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    'content': evt.target.value,
-                    'poster': {
-                        name: this.props.userInfo.name,
-                        email: this.props.userInfo.email,
-                        picture: this.props.userInfo.picture,
-                        role: this.props.userInfo.role
-                    }
-                })
-            }).then(resp => {
-                if (resp.status === 201) {
-                    this.setState({
-                        value: ""
-                    })
-                }
+    handleFormSubmit = evt => {
+        evt.preventDefault();
 
-                return resp.json()
-            }).then(_ => window.location.reload())
-        }
+        fetch(`${Config.Hostname}/post/add`, {
+            method: 'POST',
+            credentials: 'include',
+            body: new FormData(document.querySelector("#new-comment-form"))
+        }).then(resp => {
+            if (resp.status === 201) {
+                this.setState({
+                    value: ""
+                })
+            }
+
+            return resp
+        }).then(_ => window.location.reload())
     };
 
     render() {
         const user = this.props.userInfo;
         return (
-            <div class={style.editor}>
+            <form class={style.editor}
+                  id="new-comment-form"
+                  encType="multipart/form-data"
+                  onSubmit={this.handleFormSubmit}>
                 <aside class={style.postAuthor}>
                     <img src={user.picture} alt={user.name} />
                     { user.name }
                 </aside>
 
-                <textarea onChange={this.handleChange}
-                          onKeyPress={this.handleEnterPressed}
-                          value={this.state.value} />
-            </div>
+                <div class={style.formInputs}>
+                    <textarea onChange={this.handleChange}
+                              name="content"
+                              value={this.state.value} />
+
+                    <input type="submit" value="Post" />
+                </div>
+
+                <hr style="clear: both;"/>
+            </form>
         );
     }
 }
