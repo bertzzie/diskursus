@@ -2,6 +2,7 @@ import { h, Component } from 'preact';
 import style from './style';
 
 import Config from '../../Config';
+import camera from '../../assets/icons/upload-32x32.png';
 
 import 'whatwg-fetch'
 
@@ -52,6 +53,11 @@ export default class NewPostEditor extends Component {
                               value={this.state.value} />
 
                     <input type="submit" value="Post" />
+
+                    <input type="file" name="image" id="image" class={style.imageField} />
+                    <label for="image">
+                        <img src={camera} alt="Logo Upload"/>
+                    </label>
                 </div>
 
                 <hr style="clear: both;"/>

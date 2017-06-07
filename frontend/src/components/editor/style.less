@@ -43,4 +43,33 @@
     margin: 15px 0;
     width: 70px;
   }
+
+  .imageField {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
+
+  .imageField + label {
+    color: #0D2FFF;
+    cursor: pointer;
+    display: inline-block;
+    float: right;
+    font-size: 11px;
+    height: 20px;
+    margin: 15px;
+    width: 20px;
+
+    img {
+      width: 20px;
+    }
+  }
+
+  .imageField:focus + label,
+  .imageField + label:hover {
+    background-color: rgba(102, 198, 246, 0.5);
+  }
 }

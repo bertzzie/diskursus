@@ -13,6 +13,7 @@ import org.diskursus.model.User
 import org.diskursus.repository.CommentRepository
 import org.diskursus.repository.PostRepository
 import org.diskursus.repository.UserRepository
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -86,7 +87,12 @@ class PostController @Inject constructor(override val router: Router,
         req.request().isExpectMultipart = true
         req.next()
     }
-    route(HttpMethod.POST, "/add").handler(BodyHandler.create().setMergeFormAttributes(true))
+    route(HttpMethod.POST, "/add").handler(
+            BodyHandler.create()
+                       .setMergeFormAttributes(true)
+                       .setUploadsDirectory("/frontend/assets/uploads/")
+    )
+
     route(HttpMethod.POST, "/add").handler{ req ->
         val formData = req.request().formAttributes()
         val newPost = Post(
