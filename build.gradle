@@ -74,6 +74,7 @@ dependencies {
     compile "io.vertx:vertx-core:$vertx_version"
     compile "io.vertx:vertx-lang-kotlin:$vertx_version"
     compile "io.vertx:vertx-rx-java:$vertx_version"
+    compile "io.vertx:vertx-sync:$vertx_version"
     compile "io.vertx:vertx-web:$vertx_version"
     compile "io.vertx:vertx-mongo-client:$vertx_version"
 
