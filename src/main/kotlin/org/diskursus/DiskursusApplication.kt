@@ -7,6 +7,7 @@ import io.vertx.kotlin.core.json.json
 import io.vertx.kotlin.core.json.obj
 import io.vertx.kotlin.config.ConfigRetrieverOptions
 import io.vertx.kotlin.config.ConfigStoreOptions
+import org.diskursus.ext.logger
 import org.diskursus.module.DaggerApplicationComponent
 import org.diskursus.module.MongoModule
 import org.diskursus.module.VertxModule
@@ -18,14 +19,16 @@ import org.diskursus.module.VertxModule
  */
 class DiskursusApplication {
     companion object {
+        val log = logger(DiskursusApplication::class)
+
         @JvmStatic fun main(args: Array<String>) {
-            println("Starting Diskursus...")
+            log.info("Starting Diskursus...")
             val vertx = Vertx.vertx()
 
             val configRetriever = configRetriever(vertx)
             configRetriever.getConfig({ config ->
                 if (config.failed()) {
-                    println("Server failed to start when loading config. Cause: ${config.cause()}")
+                    log.info("Server failed to start when loading config. Cause: ${config.cause()}")
                 } else {
                     val configResult = config.result()
                     val app = DaggerApplicationComponent.builder()
@@ -34,16 +37,16 @@ class DiskursusApplication {
                             .build()
 
                     // data initializer
-                    println("Running data initializer for default user (if not exists)...")
+                    log.info("Running data initializer for default user (if not exists)...")
                     val initializer = app.initializer()
                     initializer()
 
-                    println("Deploying main verticle...")
+                    log.info("Deploying main verticle...")
                     vertx.deployVerticle(app.mainVerticle(), DeploymentOptions().apply {
                         this.config = configResult
                     })
 
-                    println("Server successfully started...")
+                    log.info("Server successfully started...")
                 }
             })
 
