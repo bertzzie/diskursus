@@ -9,6 +9,8 @@ import io.vertx.ext.web.handler.CorsHandler
 import io.vertx.ext.web.handler.SessionHandler
 import io.vertx.ext.web.sstore.LocalSessionStore
 import org.diskursus.DiskursusConfiguration
+import org.diskursus.model.User
+import org.diskursus.model.UserRole
 
 /**
  * [Documentation Here]
@@ -49,6 +51,17 @@ abstract class Controller(val handlers: Router.() -> Unit) {
                 context.response()
                         .setStatusCode(403)
                         .end()
+            }
+        }
+
+        val MustBeAdminHandler = { context: RoutingContext ->
+            val session = context.session()
+            val user = session.get<User>(DiskursusConfiguration.UserInfoSessionKey)
+            when(user.role) {
+                UserRole.ADMIN -> context.next()
+                else -> context.response()
+                               .setStatusCode(403)
+                               .end()
             }
         }
     }

@@ -7,12 +7,11 @@ import io.vertx.core.json.Json
 import io.vertx.ext.auth.AuthProvider
 import io.vertx.ext.web.handler.BodyHandler
 import org.diskursus.DiskursusConfiguration
-import org.diskursus.controller.Controller.Companion.MustAuthenticateHandler
-import org.diskursus.model.LoginResponse
+import org.diskursus.model.*
 import javax.inject.Inject
-import org.diskursus.model.User
-import org.diskursus.model.UserInfo
 import org.diskursus.repository.UserRepository
+import org.joda.time.DateTime
+import org.mindrot.jbcrypt.BCrypt
 
 /**
  * [Documentation Here]
@@ -47,6 +46,46 @@ class UserController @Inject constructor(override val router: Router,
                    .end(Json.encode(response.toJson()))
             }
         })
+    }
+
+    router.route(HttpMethod.POST, "/register").handler(BodyHandler.create().setMergeFormAttributes(true))
+    router.route(HttpMethod.POST, "/register").handler{ req ->
+        val formData = req.request().formAttributes()
+        val data = Register(
+                username = formData.get("username"),
+                password = formData.get("password"),
+                retypePassword = formData.get("retypePassword")
+        )
+
+        if(Register.validate(data)) {
+            val user = User(
+                    data.username,
+                    "",
+                    BCrypt.hashpw(data.password, BCrypt.gensalt()),
+                    DiskursusConfiguration.DefaultUserPic,
+                    UserStatus.ACTIVE,
+                    UserRole.STANDARD,
+                    null,
+                    DateTime.now()
+            )
+
+            userRepository.addUser(user).subscribe(
+                    { res ->
+                        req.response()
+                                .putHeader("content-type", "application/json")
+                                .end(Json.encode(user.toPublicJson()))
+                    },
+                    { err ->
+                        req.response()
+                                .putHeader("content-type", "text/html")
+                                .end(err.toString())
+                    }
+            )
+        } else {
+            req.response()
+               .putHeader("content-type", "text/html")
+               .end("Password and retype password is different.")
+        }
     }
 
     router.route("/info").handler{ req ->
@@ -104,6 +143,7 @@ class UserController @Inject constructor(override val router: Router,
     }
 
     router.route(HttpMethod.DELETE, "/:name/delete").handler(MustAuthenticateHandler)
+    router.route(HttpMethod.DELETE, "/:name/delete").handler(MustBeAdminHandler)
     router.route(HttpMethod.DELETE, "/:name/delete").handler{ req ->
         val name = req.request().getParam("name")
         val user = userRepository.removeUser(name)
@@ -122,6 +162,7 @@ class UserController @Inject constructor(override val router: Router,
     }
 
     router.route(HttpMethod.PUT, "/add").handler(MustAuthenticateHandler)
+    router.route(HttpMethod.PUT, "/add").handler(MustBeAdminHandler)
     router.route(HttpMethod.PUT, "/add").handler(BodyHandler.create())
     router.route(HttpMethod.PUT, "/add").handler{ req ->
         val newUser = User.fromJson(req.bodyAsJson)
@@ -141,6 +182,7 @@ class UserController @Inject constructor(override val router: Router,
     }
 
     router.route(HttpMethod.POST, "/update").handler(MustAuthenticateHandler)
+    router.route(HttpMethod.POST, "/update").handler(MustBeAdminHandler)
     router.route(HttpMethod.POST, "/update").handler(BodyHandler.create())
     router.route(HttpMethod.POST, "/update").handler{ req ->
         val newUser = User.fromJson(req.bodyAsJson)
