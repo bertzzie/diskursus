@@ -12,5 +12,6 @@ object DiskursusConfiguration {
     val UserLoginSessionKey = "user_logged_in"
     val UserInfoSessionKey = "user_info"
 
+    val DefaultUserPic = "/assets/default-user.png"
     val UploadURLPath = "/assets/"
 }
