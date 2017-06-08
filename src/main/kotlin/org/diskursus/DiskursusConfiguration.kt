@@ -11,4 +11,6 @@ object DiskursusConfiguration {
 
     val UserLoginSessionKey = "user_logged_in"
     val UserInfoSessionKey = "user_info"
+
+    val UploadURLPath = "/assets/"
 }

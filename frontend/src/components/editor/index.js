@@ -8,7 +8,8 @@ import 'whatwg-fetch'
 
 export default class NewPostEditor extends Component {
     state = {
-        value: ""
+        value: "",
+        fileCount: 0
     };
 
     handleChange = evt => {
@@ -35,8 +36,16 @@ export default class NewPostEditor extends Component {
         }).then(_ => window.location.reload())
     };
 
+    handleFileChanged = evt => {
+        this.setState({
+            fileCount: evt.target.files.length
+        });
+    };
+
     render() {
         const user = this.props.userInfo;
+        const label = this.state.fileCount > 0 ? `${this.state.fileCount} file dipilih` : "";
+
         return (
             <form class={style.editor}
                   id="new-comment-form"
@@ -54,9 +63,15 @@ export default class NewPostEditor extends Component {
 
                     <input type="submit" value="Post" />
 
-                    <input type="file" name="image" id="image" class={style.imageField} />
+                    <input type="file"
+                           name="image"
+                           id="image"
+                           class={style.imageField}
+                           accept="image/*"
+                           multiple={true}
+                           onChange={this.handleFileChanged} />
                     <label for="image">
-                        <img src={camera} alt="Logo Upload"/>
+                        { label } <img src={camera} alt="Logo Upload"/>
                     </label>
                 </div>
 

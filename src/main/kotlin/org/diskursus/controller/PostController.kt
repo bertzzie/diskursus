@@ -90,15 +90,38 @@ class PostController @Inject constructor(override val router: Router,
     route(HttpMethod.POST, "/add").handler(
             BodyHandler.create()
                        .setMergeFormAttributes(true)
-                       .setUploadsDirectory("/frontend/assets/uploads/")
     )
-
     route(HttpMethod.POST, "/add").handler{ req ->
+        fun getExtension(filename: String): String {
+            return filename.split(".").last()
+        }
+
         val formData = req.request().formAttributes()
+        val uploadPath = DiskursusConfiguration.UploadURLPath
+        val uploads = req.fileUploads()
+                         .toList()
+                         .filter{ upload -> upload.contentType().contains("image") }
+                         .map{ upload ->
+                             "$uploadPath${upload.uploadedFileName()}.${getExtension(upload.fileName())}"
+                         }
+
+        try {
+            for(upload in req.fileUploads()) {
+                val finalFileName = ".$uploadPath${upload.uploadedFileName()}.${getExtension(upload.fileName())}"
+                vertx.fileSystem().copyBlocking(upload.uploadedFileName(), finalFileName)
+                vertx.fileSystem().deleteBlocking(upload.uploadedFileName())
+            }
+        } catch(exception: Exception) {
+            req.response()
+               .putHeader("content-type", "text/html")
+               .end(exception.message)
+        }
+
         val newPost = Post(
                 _id = "",
                 content = formData.get("content"),
-                poster = req.session().get<User>(DiskursusConfiguration.UserInfoSessionKey)
+                poster = req.session().get<User>(DiskursusConfiguration.UserInfoSessionKey),
+                pictures = uploads
         )
 
         postRepository.createPost(newPost).subscribe(
@@ -115,4 +138,5 @@ class PostController @Inject constructor(override val router: Router,
                 }
         )
     }
+
 })
