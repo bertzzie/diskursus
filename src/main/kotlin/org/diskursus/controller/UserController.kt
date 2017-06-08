@@ -48,6 +48,16 @@ class UserController @Inject constructor(override val router: Router,
         })
     }
 
+    router.route("/logout").handler(MustAuthenticateHandler)
+    router.route("/logout").handler { req ->
+        req.session().destroy()
+
+        req.response()
+           .setStatusCode(302)
+           .putHeader("Location", DiskursusConfiguration.AppHostname)
+           .end()
+    }
+
     router.route(HttpMethod.POST, "/register").handler(BodyHandler.create().setMergeFormAttributes(true))
     router.route(HttpMethod.POST, "/register").handler{ req ->
         val formData = req.request().formAttributes()

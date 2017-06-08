@@ -2,6 +2,8 @@ import { h, Component } from 'preact';
 import { Link } from 'preact-router/match';
 import style from './style';
 
+import Config from '../../Config';
+
 export default class Header extends Component {
     static defaultProps = {
         userInfo: {
@@ -14,7 +16,9 @@ export default class Header extends Component {
     };
 
     loggedInMenu = () => {
-        return [];
+        return [
+            (<a href={`${Config.Hostname}/user/logout`}>Logout</a>)
+        ];
     };
 
     loggedOutMenu = () => {
