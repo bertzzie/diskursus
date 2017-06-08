@@ -30,7 +30,7 @@ data class User(val name: String,
                 "admin",
                 "admin@diskursus.org",
                 BCrypt.hashpw("admin", BCrypt.gensalt()),
-                "",
+                "/assets/default-user.png",
                 UserStatus.ACTIVE,
                 UserRole.ADMIN,
                 null,
@@ -67,7 +67,7 @@ data class User(val name: String,
                 status = UserStatus.fromString(obj.getString("status")),
                 role = UserRole.fromString(obj.getString("role")),
                 lastLogin = if(obj.getString("lastLogin") == null) null else DateTime.parse(obj.getString("lastLogin")),
-                registerTime = DateTime.parse(obj.getString("registerTime"))
+                registerTime = DateTime(obj.getLong("registerTime"))
         )
     }
 

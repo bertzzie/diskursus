@@ -20,7 +20,7 @@ export default class Home extends Component {
 
     state = {
         posts: [],
-        hasMore: true,
+        hasMore: false,
     };
 
 	componentDidMount() {
@@ -74,7 +74,7 @@ export default class Home extends Component {
                 { this.state.posts.map(this.renderPost) }
 
                 {
-                    this.state.hasMore ?
+                    this.state.hasMore && this.state.posts.length > 0 ?
                       <div class={style.loadMore}>
                           <input type="button"
                                  value="Lihat Selebihnya"
