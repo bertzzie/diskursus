@@ -5,7 +5,6 @@ import Config from '../Config';
 import 'whatwg-fetch';
 
 import Header from './header';
-import Chat from '../routes/chat';
 import Home from '../routes/home';
 import Login from '../routes/login';
 import Post from '../routes/post';
@@ -55,7 +54,6 @@ export default class App extends Component {
 				<Header userInfo={this.state.userInfo} />
 				<Router onChange={this.handleRoute}>
 					<Home path="/" userInfo={this.state.userInfo} />
-					<Chat path="/chat/" user="me" />
                     <Login path="/login/" />
                     <Post path="/post/:postId" />
                     <Register path="/register" />

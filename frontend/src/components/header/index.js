@@ -14,7 +14,7 @@ export default class Header extends Component {
     };
 
     loggedInMenu = () => {
-        return (<Link activeClassName={style.active} href="/chat">Admin Chat</Link>)
+        return [];
     };
 
     loggedOutMenu = () => {
