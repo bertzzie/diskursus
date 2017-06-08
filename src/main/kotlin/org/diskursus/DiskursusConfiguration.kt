@@ -8,6 +8,7 @@ package org.diskursus
 object DiskursusConfiguration {
     val HttpPort = "http_port"
     val AppHostname = "http://localhost:8080"
+    val AppSecret = "Apoqjwe213kcjASDli)pok./!?9nc"
     val UserDocName = "users_doc"
 
     val UserLoginSessionKey = "user_logged_in"

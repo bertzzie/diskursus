@@ -24,10 +24,10 @@ abstract class Controller(val handlers: Router.() -> Unit) {
     fun create(): Router {
         return router.apply {
             val sessionHandler = SessionHandler.create(LocalSessionStore.create(vertx))
-                    //.setCookieHttpOnlyFlag(true)
-                    //.setCookieSecureFlag(true)
+                                               .setCookieHttpOnlyFlag(true)
+                                               .setCookieSecureFlag(true)
 
-            val corsHandler = CorsHandler.create("*")
+            val corsHandler = CorsHandler.create(DiskursusConfiguration.AppHostname)
                     .allowedMethods(setOf(HttpMethod.GET, HttpMethod.PUT, HttpMethod.POST, HttpMethod.DELETE))
                     .allowedHeader("content-type")
                     .allowCredentials(true)
@@ -35,6 +35,16 @@ abstract class Controller(val handlers: Router.() -> Unit) {
             router.route().handler(CookieHandler.create())
             router.route().handler(sessionHandler)
             router.route().handler(corsHandler)
+            router.route().handler { context ->
+                context.response()
+                       .putHeader("X-Content-Type-Options", "nosniff")
+                       .putHeader("Strict-Transport-Security", "max-age=${15768000}")
+                       .putHeader("X-Download-Options", "noopen")
+                       .putHeader("X-XSS-Protection", "1; mode=block")
+                       .putHeader("X-FRAME-OPTIONS", "DENY")
+
+                context.next()
+            }
 
             handlers()
         }

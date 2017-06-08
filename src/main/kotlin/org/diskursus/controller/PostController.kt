@@ -26,6 +26,9 @@ class PostController @Inject constructor(override val router: Router,
                                          val postRepository: PostRepository,
                                          val commentRepository: CommentRepository): Controller({
 
+    val LimitKB = 1024L
+    val LimitMB = 1024L * LimitKB
+
     route("/list").handler{ req ->
         val cursor = req.request().getParam("cursor")
         val perPage = req.request().getParam("per_page") ?: "5"
@@ -90,6 +93,7 @@ class PostController @Inject constructor(override val router: Router,
     route(HttpMethod.POST, "/add").handler(
             BodyHandler.create()
                        .setMergeFormAttributes(true)
+                       .setBodyLimit(25 * LimitMB)
     )
     route(HttpMethod.POST, "/add").handler{ req ->
         fun getExtension(filename: String): String {

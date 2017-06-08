@@ -1,5 +1,6 @@
 package org.diskursus.controller
 
+import com.sun.xml.internal.ws.assembler.jaxws.MustUnderstandTubeFactory
 import io.vertx.core.Vertx
 import io.vertx.ext.web.Router
 import io.vertx.core.http.HttpMethod
@@ -98,6 +99,7 @@ class UserController @Inject constructor(override val router: Router,
         }
     }
 
+    router.route("/info").handler(MustAuthenticateHandler)
     router.route("/info").handler{ req ->
         val user = req.session().get<User>(DiskursusConfiguration.UserInfoSessionKey)
         val isLoggedIn = req.session().get<Boolean>(DiskursusConfiguration.UserLoginSessionKey)
@@ -114,6 +116,8 @@ class UserController @Inject constructor(override val router: Router,
            .end(Json.encode(userInfo.toJson()))
     }
 
+    router.route("/list").handler(MustAuthenticateHandler)
+    router.route("/list").handler(MustBeAdminHandler)
     router.route("/list").handler{ req ->
         val users = userRepository.getAllUsers()
         users.subscribe(
