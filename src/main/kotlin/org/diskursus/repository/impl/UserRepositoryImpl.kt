@@ -11,6 +11,7 @@ import org.diskursus.model.User
 import org.diskursus.repository.UserRepository
 import org.mindrot.jbcrypt.BCrypt
 import rx.Single
+import java.lang.NullPointerException
 import javax.inject.Inject
 
 /**
@@ -31,21 +32,25 @@ class UserRepositoryImpl @Inject constructor(val client: MongoClient) : UserRepo
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getUserData(name: String): Single<User> {
+    override fun getUserData(name: String): Single<User?> {
         val result = single<JsonObject> {
             client.findOne(docName, json { obj ( "name" to name ) }, null, it)
         }
 
-        return result.map { r -> User.fromJson(r) }
+        return result.map { r: JsonObject? ->
+            if (r == null) null
+            else User.fromJson(r)
+        }
     }
 
-    override fun getUserDataFromID(id: String): Single<User> {
+    override fun getUserDataFromID(id: String): Single<User?> {
         val result = single<JsonObject> {
             client.findOne(docName, json { obj ( "_id" to id ) }, null, it)
         }
 
-        return result.map{ r ->
-            User.fromJson(r)
+        return result.map{ r: JsonObject? ->
+            if (r == null) null
+            else User.fromJson(r)
         }
     }
 
@@ -76,7 +81,9 @@ class UserRepositoryImpl @Inject constructor(val client: MongoClient) : UserRepo
 
     override fun authenticate(name: String, password: String): Single<User?> {
         return getUserData(name).map{ user ->
-            if (BCrypt.checkpw(password, user.password)) user
+            if (user == null) {
+                null
+            } else if (BCrypt.checkpw(password, user.password.orEmpty())) user
             else null
         }
     }

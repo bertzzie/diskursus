@@ -11,8 +11,8 @@ import rx.Single
 interface UserRepository {
     fun getAllUsers(): Single<List<User>>
     fun getUsers(page: Int = 1, perPage: Int = 10): Single<List<User>>
-    fun getUserData(name: String): Single<User>
-    fun getUserDataFromID(id: String): Single<User>
+    fun getUserData(name: String): Single<User?>
+    fun getUserDataFromID(id: String): Single<User?>
 
     fun addUser(user: User): Single<String>
     fun updateUser(user: User): Single<Boolean>

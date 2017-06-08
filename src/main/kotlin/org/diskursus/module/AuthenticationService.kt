@@ -19,15 +19,19 @@ class AuthenticationService @Inject constructor(val userRepository: UserReposito
         val username = authInfo.getString("username")
         val password = authInfo.getString("password")
 
-        userRepository.authenticate(username, password).subscribe(
-                { result ->
-                    if (result != null) {
-                        // ini isi apa?
-                        resultHandler.handle(Future.succeededFuture(result))
-                    } else {
-                        resultHandler.handle(Future.failedFuture(Exception("Wrong username or password")))
+        try {
+            userRepository.authenticate(username, password).subscribe(
+                    { result ->
+                        if (result != null) {
+                            // ini isi apa?
+                            resultHandler.handle(Future.succeededFuture(result))
+                        } else {
+                            resultHandler.handle(Future.failedFuture(Exception("Wrong username or password")))
+                        }
                     }
-                }
-        )
+            )
+        } catch (exception: Exception) {
+            resultHandler.handle(Future.failedFuture("User not found in database"))
+        }
     }
 }

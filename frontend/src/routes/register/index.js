@@ -7,7 +7,8 @@ export default class Register extends Component {
     state = {
         username: "",
         password: "",
-        retypePassword: ""
+        retypePassword: "",
+        error: ""
     };
 
     handleUsernameChange = evt => {
@@ -36,9 +37,14 @@ export default class Register extends Component {
             credentials: "include",
             body: new FormData(document.querySelector("#register-form"))
         })
+        .then(r => r.json())
         .then(r => {
-            if(r.status === 200) {
-                window.location = "/login";
+            if(r.cause) {
+                this.setState({
+                    error: r.cause
+                });
+            } else {
+                window.location = "/"
             }
         })
     };
@@ -47,6 +53,11 @@ export default class Register extends Component {
         return (
             <form id="register-form" class={style.register} onSubmit={this.handleFormSubmit}>
                 <h3>Register Form</h3>
+
+                {
+                    this.state.error === "" ? null :
+                        <div style="color: red;">Error: { this.state.error }</div>
+                }
 
                 <div class={formStyle.formInput}>
                     <label htmlFor="username">Username:</label>

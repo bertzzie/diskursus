@@ -8,6 +8,7 @@ import io.vertx.ext.web.handler.BodyHandler
 import io.vertx.kotlin.core.json.json
 import io.vertx.kotlin.core.json.obj
 import org.diskursus.model.Comment
+import org.diskursus.model.ErrorResponse
 import org.diskursus.repository.CommentRepository
 import javax.inject.Inject
 
@@ -25,7 +26,7 @@ class CommentController @Inject constructor(override val router: Router,
         commentRepository.getCommentCountByPost(postId).subscribe(
                 { result ->
                     req.response()
-                            .putHeader("content-type", "application/json")
+                            .putHeader("Content-Type", "application/json")
                             .end(Json.encode(json {
                                 obj(
                                         "postId" to postId,
@@ -34,9 +35,11 @@ class CommentController @Inject constructor(override val router: Router,
                             }))
                 },
                 { err ->
+                    val error = ErrorResponse(err.message.orEmpty(), "500")
                     req.response()
-                            .putHeader("content-type", "text/html")
-                            .end(err.toString())
+                       .setStatusCode(500)
+                       .putHeader("Content-Type", "application/json")
+                       .end(Json.encode(error.toJson()))
                 }
         )
     }
@@ -50,13 +53,15 @@ class CommentController @Inject constructor(override val router: Router,
                 { _ ->
                     req.response()
                        .setStatusCode(201)
-                       .putHeader("content-type", "application/json")
+                       .putHeader("Content-Type", "application/json")
                        .end(req.bodyAsString)
                 },
                 { err ->
+                    val error = ErrorResponse(err.message.orEmpty(), "500")
                     req.response()
-                       .putHeader("content-type", "text/html")
-                       .end(err.toString())
+                       .setStatusCode(500)
+                       .putHeader("Content-Type", "application/json")
+                       .end(Json.encode(error.toJson()))
                 }
         )
     }

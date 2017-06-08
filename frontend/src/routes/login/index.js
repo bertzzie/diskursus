@@ -7,7 +7,8 @@ import 'whatwg-fetch'
 export default class Login extends Component {
     state = {
         username: "",
-        password: ""
+        password: "",
+        error: ""
     };
 
     handleUsernameChange = e => {
@@ -34,8 +35,12 @@ export default class Login extends Component {
         })
         .then(response => response.json())
         .then(r => {
-            if(r.success) {
+            if(r.success === "true") {
                 window.location = "/";
+            } else {
+                this.setState({
+                    error: r.cause
+                });
             }
         })
     };
@@ -44,6 +49,11 @@ export default class Login extends Component {
         return (
             <form id="login-form" class={style.login} onSubmit={this.handleFormSubmit}>
                 <h3>Masukkan data login</h3>
+
+                {
+                    this.state.error === "" ? null :
+                        <div style="color: red;">Error: { this.state.error }</div>
+                }
 
                 <div class={style.formInput}>
                     <label htmlFor="username">Username:</label>

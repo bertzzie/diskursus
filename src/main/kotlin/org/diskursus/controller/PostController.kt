@@ -7,6 +7,7 @@ import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.BodyHandler
 import org.diskursus.DiskursusConfiguration
 import org.diskursus.ext.single
+import org.diskursus.model.ErrorResponse
 import org.diskursus.model.FullPost
 import org.diskursus.model.Post
 import org.diskursus.model.User
@@ -36,13 +37,15 @@ class PostController @Inject constructor(override val router: Router,
         postRepository.getPosts(cursor, perPage.toInt()).subscribe(
                 { result ->
                     req.response()
-                       .putHeader("content-type", "application/json")
+                       .putHeader("Content-Type", "application/json")
                        .end(Json.encode(result))
                 },
                 { err ->
+                    val error = ErrorResponse(err.message.orEmpty(), "500")
                     req.response()
-                       .putHeader("content-type", "text/html")
-                       .end(err.toString())
+                       .setStatusCode(500)
+                       .putHeader("Content-Type", "application/json")
+                       .end(Json.encode(error.toJson()))
                 }
         )
     }
@@ -53,13 +56,15 @@ class PostController @Inject constructor(override val router: Router,
         postRepository.getPost(postId).subscribe(
                 { result ->
                     req.response()
-                       .putHeader("content-type", "application/json")
+                       .putHeader("Content-Type", "application/json")
                        .end(Json.encode(result))
                 },
                 { err ->
+                    val error = ErrorResponse(err.message.orEmpty(), "500")
                     req.response()
-                       .putHeader("content-type", "text/html")
-                       .end(err.toString())
+                       .setStatusCode(500)
+                       .putHeader("Content-Type", "application/json")
+                       .end(Json.encode(error.toJson()))
                 }
         )
     }
@@ -74,13 +79,15 @@ class PostController @Inject constructor(override val router: Router,
                         { result ->
                             val finalResult = result.map{r -> r.toJson()}
                             req.response()
-                                    .putHeader("content-type", "application/json")
-                                    .end(Json.encode(finalResult))
+                               .putHeader("Content-Type", "application/json")
+                               .end(Json.encode(finalResult))
                         },
                         { err ->
+                            val error = ErrorResponse(err.message.orEmpty(), "500")
                             req.response()
-                                    .putHeader("content-type", "text/html")
-                                    .end(err.toString())
+                               .setStatusCode(500)
+                               .putHeader("Content-Type", "application/json")
+                               .end(Json.encode(error.toJson()))
                         }
                 )
     }
@@ -116,9 +123,11 @@ class PostController @Inject constructor(override val router: Router,
                 vertx.fileSystem().deleteBlocking(upload.uploadedFileName())
             }
         } catch(exception: Exception) {
+            val error = ErrorResponse("Gagal menyimpan gambar.", "500")
             req.response()
-               .putHeader("content-type", "text/html")
-               .end(exception.message)
+               .setStatusCode(500)
+               .putHeader("Content-Type", "application/json")
+               .end(Json.encode(error.toJson()))
         }
 
         val newPost = Post(
@@ -132,13 +141,15 @@ class PostController @Inject constructor(override val router: Router,
                 { _ ->
                     req.response()
                        .setStatusCode(201)
-                       .putHeader("content-type", "application/json")
+                       .putHeader("Content-Type", "application/json")
                        .end(req.bodyAsString)
                 },
                 { err ->
+                    val error = ErrorResponse(err.message.orEmpty(), "500")
                     req.response()
-                       .putHeader("content-type", "text/html")
-                       .end(err.toString())
+                       .setStatusCode(500)
+                       .putHeader("Content-Type", "application/json")
+                       .end(Json.encode(error.toJson()))
                 }
         )
     }

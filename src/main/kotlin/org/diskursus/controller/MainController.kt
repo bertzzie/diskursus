@@ -17,10 +17,4 @@ class MainController @Inject constructor(override val router: Router,
     mountSubRouter("/user/", userController.create())
     mountSubRouter("/post/", postController.create())
     mountSubRouter("/comment/", commentController.create())
-
-    router.route("/").handler{ req ->
-        req.response()
-                .putHeader("content-type", "text/html")
-                .end("<h1>Hello from my first Vert.x Application!</h1>")
-    }
 })

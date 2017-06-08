@@ -1,12 +1,12 @@
 package org.diskursus.controller
 
-import com.sun.xml.internal.ws.assembler.jaxws.MustUnderstandTubeFactory
 import io.vertx.core.Vertx
 import io.vertx.ext.web.Router
 import io.vertx.core.http.HttpMethod
 import io.vertx.core.json.Json
 import io.vertx.ext.auth.AuthProvider
 import io.vertx.ext.web.handler.BodyHandler
+import io.vertx.kotlin.core.json.json
 import org.diskursus.DiskursusConfiguration
 import org.diskursus.model.*
 import javax.inject.Inject
@@ -37,13 +37,14 @@ class UserController @Inject constructor(override val router: Router,
                 req.session().put(DiskursusConfiguration.UserInfoSessionKey, user)
 
                 req.response()
-                   .putHeader("content-type", "application/json")
+                   .putHeader("Content-Type", "application/json")
                    .end(Json.encode(response.toJson()))
             } else {
-                val response = LoginResponse(false)
+                val response = ErrorResponse("User atau password salah.", "400")
 
                 req.response()
-                   .putHeader("content-type", "application/json")
+                   .setStatusCode(400)
+                   .putHeader("Content-Type", "application/json")
                    .end(Json.encode(response.toJson()))
             }
         })
@@ -83,19 +84,24 @@ class UserController @Inject constructor(override val router: Router,
             userRepository.addUser(user).subscribe(
                     { _ ->
                         req.response()
-                                .putHeader("content-type", "application/json")
-                                .end(Json.encode(user.toPublicJson()))
+                           .setStatusCode(201)
+                           .putHeader("Content-Type", "application/json")
+                           .end(Json.encode(user.toPublicJson()))
                     },
                     { err ->
+                        val error = ErrorResponse("Pengguna sudah ada.", "500")
                         req.response()
-                                .putHeader("content-type", "text/html")
-                                .end(err.toString())
+                           .setStatusCode(500)
+                           .putHeader("Content-Type", "application/json")
+                           .end(Json.encode(error.toJson()))
                     }
             )
         } else {
+            val error = ErrorResponse("Password dan ulangi tidak sama.", "400")
             req.response()
-               .putHeader("content-type", "text/html")
-               .end("Password and retype password is different.")
+               .setStatusCode(400)
+               .putHeader("Content-Type", "application/json")
+               .end(Json.encode(error.toJson()))
         }
     }
 
@@ -112,7 +118,7 @@ class UserController @Inject constructor(override val router: Router,
         )
 
         req.response()
-           .putHeader("content-type", "application/json")
+           .putHeader("Content-Type", "application/json")
            .end(Json.encode(userInfo.toJson()))
     }
 
@@ -128,13 +134,15 @@ class UserController @Inject constructor(override val router: Router,
                     }
 
                     req.response()
-                            .putHeader("content-type", "application/json")
-                            .end(sb.toString())
+                       .putHeader("Content-Type", "application/json")
+                       .end(sb.toString())
                 },
                 { err ->
+                    val error = ErrorResponse(err.message.orEmpty(), "500")
                     req.response()
-                            .putHeader("content-type", "text/html")
-                            .end(err.toString())
+                       .setStatusCode(500)
+                       .putHeader("Content-Type", "application/json")
+                       .end(Json.encode(error.toJson()))
                 }
         )
     }
@@ -144,14 +152,24 @@ class UserController @Inject constructor(override val router: Router,
         val user = userRepository.getUserData(name)
         user.subscribe(
                 { res ->
-                    req.response()
-                            .putHeader("content-type", "application/json")
-                            .end(Json.encode(res.toPublicJson()))
+                    if (res == null) {
+                        val error = ErrorResponse("User tidak ditemkan", "404")
+                        req.response()
+                           .setStatusCode(404)
+                           .putHeader("Content-Type", "application/json")
+                           .end(Json.encode(error.toJson()))
+                    } else {
+                        req.response()
+                           .putHeader("Content-Type", "application/json")
+                           .end(Json.encode(res.toPublicJson()))
+                    }
                 },
                 { err ->
+                    val error = ErrorResponse(err.message.orEmpty(), "500")
                     req.response()
-                            .putHeader("content-type", "text/html")
-                            .end(err.toString())
+                       .setStatusCode(500)
+                       .putHeader("Content-Type", "application/json")
+                       .end(Json.encode(error.toJson()))
                 }
         )
     }
@@ -164,13 +182,16 @@ class UserController @Inject constructor(override val router: Router,
         user.subscribe(
                 { _ ->
                     req.response()
-                            .putHeader("content-type", "text/plain")
-                            .end("User $name deleted!")
+                       .setStatusCode(204)
+                       .putHeader("Content-Type", "application/json")
+                       .end()
                 },
                 { err ->
+                    val error = ErrorResponse(err.message.orEmpty(), "500")
                     req.response()
-                            .putHeader("content-type", "text/html")
-                            .end(err.toString())
+                       .setStatusCode(500)
+                       .putHeader("Content-Type", "application/json")
+                       .end(Json.encode(error.toJson()))
                 }
         )
     }
@@ -184,13 +205,16 @@ class UserController @Inject constructor(override val router: Router,
         userRepository.addUser(newUser).subscribe(
                 { _ ->
                     req.response()
-                            .putHeader("content-type", "application/json")
-                            .end(req.bodyAsString)
+                       .setStatusCode(201)
+                       .putHeader("Content-Type", "application/json")
+                       .end(req.bodyAsString)
                 },
                 { err ->
+                    val error = ErrorResponse(err.message.orEmpty(), "500")
                     req.response()
-                            .putHeader("content-type", "text/html")
-                            .end(err.toString())
+                       .setStatusCode(500)
+                       .putHeader("Content-Type", "application/json")
+                       .end(Json.encode(error.toJson()))
                 }
         )
     }
@@ -204,13 +228,15 @@ class UserController @Inject constructor(override val router: Router,
         userRepository.updateUser(newUser).subscribe(
                 { _ ->
                     req.response()
-                            .putHeader("content-type", "application/json")
-                            .end(req.bodyAsString)
+                       .putHeader("Content-Type", "application/json")
+                       .end(req.bodyAsString)
                 },
                 { err ->
+                    val error = ErrorResponse(err.message.orEmpty(), "500")
                     req.response()
-                            .putHeader("content-type", "text/html")
-                            .end(err.toString())
+                       .setStatusCode(500)
+                       .putHeader("Content-Type", "application/json")
+                       .end(Json.encode(error.toJson()))
                 }
         )
     }

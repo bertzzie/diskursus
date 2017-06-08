@@ -29,7 +29,7 @@ abstract class Controller(val handlers: Router.() -> Unit) {
 
             val corsHandler = CorsHandler.create(DiskursusConfiguration.AppHostname)
                     .allowedMethods(setOf(HttpMethod.GET, HttpMethod.PUT, HttpMethod.POST, HttpMethod.DELETE))
-                    .allowedHeader("content-type")
+                    .allowedHeader("Content-Type")
                     .allowCredentials(true)
 
             router.route().handler(CookieHandler.create())
