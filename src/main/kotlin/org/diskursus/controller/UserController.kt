@@ -81,7 +81,7 @@ class UserController @Inject constructor(override val router: Router,
             )
 
             userRepository.addUser(user).subscribe(
-                    { res ->
+                    { _ ->
                         req.response()
                                 .putHeader("content-type", "application/json")
                                 .end(Json.encode(user.toPublicJson()))
@@ -162,7 +162,7 @@ class UserController @Inject constructor(override val router: Router,
         val name = req.request().getParam("name")
         val user = userRepository.removeUser(name)
         user.subscribe(
-                { res ->
+                { _ ->
                     req.response()
                             .putHeader("content-type", "text/plain")
                             .end("User $name deleted!")
@@ -182,7 +182,7 @@ class UserController @Inject constructor(override val router: Router,
         val newUser = User.fromJson(req.bodyAsJson)
 
         userRepository.addUser(newUser).subscribe(
-                { res ->
+                { _ ->
                     req.response()
                             .putHeader("content-type", "application/json")
                             .end(req.bodyAsString)
@@ -202,7 +202,7 @@ class UserController @Inject constructor(override val router: Router,
         val newUser = User.fromJson(req.bodyAsJson)
 
         userRepository.updateUser(newUser).subscribe(
-                { res ->
+                { _ ->
                     req.response()
                             .putHeader("content-type", "application/json")
                             .end(req.bodyAsString)

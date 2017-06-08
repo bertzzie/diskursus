@@ -129,7 +129,7 @@ class PostController @Inject constructor(override val router: Router,
         )
 
         postRepository.createPost(newPost).subscribe(
-                { result ->
+                { _ ->
                     req.response()
                        .setStatusCode(201)
                        .putHeader("content-type", "application/json")

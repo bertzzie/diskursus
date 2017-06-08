@@ -47,9 +47,9 @@ class CommentRepositoryImpl @Inject constructor(val client: MongoClient): Commen
         return result.map{ r -> r.map{ Comment.fromJson(it) } }
     }
 
-    override fun getCommentCountByPost(postID: String): Single<Long> {
+    override fun getCommentCountByPost(postId: String): Single<Long> {
         val query = json {
-            obj("postId" to postID)
+            obj("postId" to postId)
         }
 
         return single { client.count(docName, query, it) }

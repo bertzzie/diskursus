@@ -10,8 +10,8 @@ import rx.Single
  */
 interface CommentRepository {
     fun getComment(id: String): Single<Comment>
-    fun getCommentsByPost(postID: String, cursor: String?, count: Int = 5): Single<List<Comment>>
-    fun getCommentCountByPost(postID: String): Single<Long>
+    fun getCommentsByPost(postId: String, cursor: String?, count: Int = 5): Single<List<Comment>>
+    fun getCommentCountByPost(postId: String): Single<Long>
 
     fun createComment(comment: Comment): Single<String>
     fun updateComment(comment: Comment): Single<Boolean>

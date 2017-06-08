@@ -47,7 +47,7 @@ class CommentController @Inject constructor(override val router: Router,
         val newComment = Comment.fromJson(req.bodyAsJson)
 
         commentRepository.createComment(newComment).subscribe(
-                { result ->
+                { _ ->
                     req.response()
                        .setStatusCode(201)
                        .putHeader("content-type", "application/json")
