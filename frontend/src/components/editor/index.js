@@ -2,7 +2,6 @@ import { h, Component } from 'preact';
 import style from './style';
 
 import Config from '../../Config';
-import camera from '../../assets/icons/upload-32x32.png';
 
 import 'whatwg-fetch'
 
@@ -71,7 +70,7 @@ export default class NewPostEditor extends Component {
                            multiple={true}
                            onChange={this.handleFileChanged} />
                     <label for="image">
-                        { label } <img src={camera} alt="Logo Upload"/>
+                        { label } <img src="/assets/icons/upload32x32.png" alt="Logo Upload"/>
                     </label>
                 </div>
 
