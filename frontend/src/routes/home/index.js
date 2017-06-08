@@ -5,6 +5,7 @@ import Config from '../../Config';
 import 'whatwg-fetch'
 
 import Comments from '../../components/comments';
+import Gallery from '../../components/gallery';
 import NewPostEditor from '../../components/editor';
 
 export default class Home extends Component {
@@ -58,6 +59,8 @@ export default class Home extends Component {
 
                 <hr class={style.commentSeparator} />
 
+                <Gallery images={post.pictures} />
+
                 <Comments postId={post._id} userInfo={this.props.userInfo} />
 
                 <hr class={style.postSeparator} />
@@ -71,7 +74,12 @@ export default class Home extends Component {
                 {
                     this.props.userInfo.isLoggedIn ? <NewPostEditor userInfo={this.props.userInfo} /> : null
                 }
-                { this.state.posts.map(this.renderPost) }
+
+                {
+                    this.state.posts.length > 0 ?
+                        this.state.posts.map(this.renderPost) :
+                        <p>Belum ada post.</p>
+                }
 
                 {
                     this.state.hasMore && this.state.posts.length > 0 ?
